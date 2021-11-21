@@ -7,7 +7,7 @@
     "metaplex": "./build/candy-machine-cli.js"
   },
   "scripts": {
-    "generate": "node ./build/candy-machine-cli.js create_generative_art -c traits-configuration.json -n 1",
+    "generate": "node ./build/candy-machine-cli.js create_generative_art -c traits-configuration.json -n",
     "config": "node ./build/candy-machine-cli.js generate_art_configurations traits",
     "prune": "find ./assets -name \"*.json\" -type f -delete",
     "metaplex": "node ./build/candy-machine-cli.js",
