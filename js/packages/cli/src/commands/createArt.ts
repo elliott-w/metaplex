@@ -15,6 +15,7 @@ function makeCreateImageWithCanvas(order, width, height) {
       const ID = parseInt(image.id, 10) - 1;
       for (const cur of order) {
         const imageLocation = `${TRAITS_DIRECTORY}/${cur}/${image[cur]}`;
+        console.log(imageLocation);
         const loadedImage = await loadImage(imageLocation);
         context.patternQuality = 'best';
         context.quality = 'best';
@@ -59,9 +60,7 @@ export async function createGenerativeArt(
 
   const workers = [];
   const workerNb = Math.min(CONCURRENT_WORKERS, imagesNb);
-  log.info(
-    `Instanciating ${workerNb} workers to generate ${imagesNb} images.`,
-  );
+  log.info(`Instanciating ${workerNb} workers to generate ${imagesNb} images.`);
   for (let i = 0; i < workerNb; i++) {
     const canvas = createCanvas(width, height);
     const context = canvas.getContext('2d');
@@ -73,8 +72,5 @@ export async function createGenerativeArt(
   await Promise.all(workers);
   const end = Date.now();
   const duration = end - start;
-  log.info(
-    `Generated ${imagesNb} images in`,
-    `${duration / 1000}s.`,
-  );
+  log.info(`Generated ${imagesNb} images in`, `${duration / 1000}s.`);
 }
