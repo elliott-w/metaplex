@@ -1,6 +1,6 @@
 import fs from 'fs';
 import log from 'loglevel';
-
+import path from 'path';
 // import { generateRandoms } from '../helpers/various';
 
 const { readdir, writeFile } = fs.promises;
@@ -35,7 +35,14 @@ export async function generateConfigurations(
   try {
     await Promise.all(
       traits.map(async trait => {
-        const attributes = await readdir(`./traits/${trait}`);
+        const attributes = (
+          await readdir(`./traits/${trait}`, {
+            withFileTypes: true,
+          })
+        )
+          .filter(dirent => dirent.isFile())
+          .filter(dirent => path.extname(dirent.name).toLowerCase() === 'png')
+          .map(dirent => dirent.name);
         // const randoms = generateRandoms(attributes.length - 1);
         const tmp = {};
 
