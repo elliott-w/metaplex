@@ -37,7 +37,7 @@ export const assertValidBreakdown = breakdown => {
     (sum: number, el: number) => (sum += el),
     0,
   );
-  if (total > 101 || total < 99) {
+  if (total > 1.01 || total < 0.99) {
     console.log(breakdown);
     throw new Error('Breakdown not within 1% of 100! It is: ' + total);
   }

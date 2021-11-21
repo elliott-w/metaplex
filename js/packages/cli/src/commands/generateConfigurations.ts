@@ -1,7 +1,7 @@
 import fs from 'fs';
 import log from 'loglevel';
 
-import { generateRandoms } from '../helpers/various';
+// import { generateRandoms } from '../helpers/various';
 
 const { readdir, writeFile } = fs.promises;
 
@@ -16,6 +16,7 @@ export async function generateConfigurations(
     creators: [],
     collection: {},
     breakdown: {},
+    premadeCustoms: [],
     order: [
       'background',
       'accessory',
@@ -34,11 +35,11 @@ export async function generateConfigurations(
     await Promise.all(
       traits.map(async trait => {
         const attributes = await readdir(`./traits/${trait}`);
-        const randoms = generateRandoms(attributes.length - 1);
+        // const randoms = generateRandoms(attributes.length - 1);
         const tmp = {};
 
-        attributes.forEach((attr, i) => {
-          tmp[attr] = randoms[i] / 100;
+        attributes.forEach(attr => {
+          tmp[attr] = 1 / attributes.length;
         });
 
         configs['breakdown'][trait] = tmp;
