@@ -1,0 +1,14 @@
+{
+    "order": [
+        "background",
+        "accessory",
+        "base",
+        "clothing",
+        "eyes",
+        "mouth",
+        "head",
+        "arms"
+    ],
+    "width": 2604,
+    "height": 3282
+}
