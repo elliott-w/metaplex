@@ -41,9 +41,11 @@ export async function generateConfigurations(
           })
         )
           .filter(dirent => dirent.isFile())
-          .filter(dirent => path.extname(dirent.name).toLowerCase() === 'png')
+          .filter(dirent => path.extname(dirent.name).toLowerCase() === '.png')
           .map(dirent => dirent.name);
         // const randoms = generateRandoms(attributes.length - 1);
+        console.log(attributes);
+
         const tmp = {};
 
         attributes.forEach(attr => {
