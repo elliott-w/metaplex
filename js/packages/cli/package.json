@@ -7,7 +7,8 @@
     "metaplex": "./build/candy-machine-cli.js"
   },
   "scripts": {
-    "prune-json": "find ./assets -name \"*.json\" -type f -delete",
+    "traits": "node ./build/candy-machine-cli.js generate_art_configurations traits",
+    "prune": "find ./assets -name \"*.json\" -type f -delete",
     "metaplex": "node ./build/candy-machine-cli.js",
     "build": "tsc -p ./src",
     "watch": "tsc -w -p ./src",

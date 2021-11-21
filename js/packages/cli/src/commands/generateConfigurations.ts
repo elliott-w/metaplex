@@ -10,15 +10,24 @@ export async function generateConfigurations(
 ): Promise<boolean> {
   let generateSuccessful: boolean = true;
   const configs = {
-    name: '',
+    name: 'GODz',
     symbol: '',
     description: '',
     creators: [],
     collection: {},
     breakdown: {},
-    order: traits,
-    width: 1000,
-    height: 1000,
+    order: [
+      'background',
+      'accessory',
+      'base',
+      'clothing',
+      'eyes',
+      'mouth',
+      'head',
+      'arms',
+    ],
+    width: 2604,
+    height: 3282,
   };
 
   try {
