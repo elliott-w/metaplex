@@ -1,0 +1,4 @@
+{
+    // Sets the working directory every time a new terminal is spawned
+    "terminal.integrated.cwd": "js/packages/cli",
+  }

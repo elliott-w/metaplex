@@ -22,7 +22,6 @@ yarn-error.log*
 js/.eslintcache
 target
 .env
-.vscode
 bin
 config.json
 node_modules
