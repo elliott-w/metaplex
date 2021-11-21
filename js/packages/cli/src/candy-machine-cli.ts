@@ -911,7 +911,10 @@ programCommand('get_all_mint_addresses').action(async (directory, cmd) => {
 
 programCommand('generate_art_configurations')
   .argument('<directory>', 'Directory containing traits named from 0-n', val =>
-    fs.readdirSync(`${val}`),
+    fs
+      .readdirSync(`${val}`, { withFileTypes: true })
+      .filter(dirent => dirent.isDirectory())
+      .map(dirent => dirent.name),
   )
   .action(async (files: string[]) => {
     log.info('creating traits configuration file');
