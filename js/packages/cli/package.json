@@ -7,6 +7,7 @@
     "metaplex": "./build/candy-machine-cli.js"
   },
   "scripts": {
+    "prune-json": "find ./assets -name \"*.json\" -type f -delete",
     "metaplex": "node ./build/candy-machine-cli.js",
     "build": "tsc -p ./src",
     "watch": "tsc -w -p ./src",
