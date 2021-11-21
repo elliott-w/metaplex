@@ -17,6 +17,7 @@ export async function generateConfigurations(
     collection: {},
     breakdown: {},
     premadeCustoms: [],
+    dnp: {},
     order: [
       'background',
       'accessory',
