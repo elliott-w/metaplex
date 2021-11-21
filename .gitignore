@@ -33,5 +33,8 @@ hfuzz_workspace
 **/.DS_Store
 .cache
 js/packages/web/.env
+js/packages/cli/assets
+js/packages/cli/assets-*
 traits
 traits-configuration.json
+traits-configuration*.json
