@@ -44,18 +44,20 @@ export async function generateConfigurations(
           .filter(dirent => path.extname(dirent.name).toLowerCase() === '.png')
           .map(dirent => dirent.name);
         // const randoms = generateRandoms(attributes.length - 1);
-        console.log(attributes);
+        // console.log(attributes);
 
         const tmp = {};
         let totalProbability = 1;
+        let total = attributes.length;
         if (attributes.includes('none.png')) {
           totalProbability = 0.75;
+          total -= 1;
         }
         attributes.forEach(attr => {
           if (attr === 'none.png') {
             tmp[attr] = 0.25;
           } else {
-            tmp[attr] = totalProbability / attributes.length;
+            tmp[attr] = totalProbability / total;
           }
         });
 
