@@ -47,9 +47,16 @@ export async function generateConfigurations(
         console.log(attributes);
 
         const tmp = {};
-
+        let totalProbability = 1;
+        if (attributes.includes('none.png')) {
+          totalProbability = 0.75;
+        }
         attributes.forEach(attr => {
-          tmp[attr] = 1 / attributes.length;
+          if (attr === 'none.png') {
+            tmp[attr] = 0.25;
+          } else {
+            tmp[attr] = totalProbability / attributes.length;
+          }
         });
 
         configs['breakdown'][trait] = tmp;
