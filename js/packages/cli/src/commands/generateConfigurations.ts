@@ -14,10 +14,10 @@ export async function generateConfigurations(
     symbol: '',
     description: '',
     creators: [],
+    dnp: {},
+    premadeCustoms: [],
     collection: {},
     breakdown: {},
-    premadeCustoms: [],
-    dnp: {},
     order: [
       'background',
       'accessory',
