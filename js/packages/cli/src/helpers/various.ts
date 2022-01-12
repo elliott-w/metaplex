@@ -330,7 +330,6 @@ export const generateRandomSet = (
       });
     });
   } while (!valid);
-  console.log(tmp);
   return tmp;
 };
 
