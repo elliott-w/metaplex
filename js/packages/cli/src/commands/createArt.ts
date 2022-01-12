@@ -15,7 +15,6 @@ function makeCreateImageWithCanvas(order, width, height) {
       const ID = parseInt(image.id, 10) - 1;
       for (const cur of order) {
         const imageLocation = `${TRAITS_DIRECTORY}/${cur}/${image[cur]}`;
-        console.log(imageLocation);
         const loadedImage = await loadImage(imageLocation);
         context.patternQuality = 'best';
         context.quality = 'best';

@@ -7,6 +7,7 @@ import { Token, TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import { StorageType } from './storage-type';
 import { getAtaForMint } from './accounts';
 import { CLUSTERS, DEFAULT_CLUSTER } from './constants';
+import _ from 'lodash';
 
 const { readFile } = fs.promises;
 
@@ -230,70 +231,106 @@ export const assertValidBreakdown = breakdown => {
   }
 };
 
-export const generateRandomSet = (breakdown, dnp) => {
+export const generateRandomSet = (
+  breakdown,
+  probabilityOrder,
+  dnp,
+  exclusive,
+) => {
   let valid = true;
   let tmp = {};
 
   do {
     valid = true;
-    const keys = shuffle(Object.keys(breakdown));
-    keys.forEach(attr => {
-      const breakdownToUse = breakdown[attr];
+    const keys = probabilityOrder;
+    keys.forEach(trait => {
+      const breakdownToUse = _.clone(breakdown[trait]);
 
-      const formatted = Object.keys(breakdownToUse).reduce((f, key) => {
-        if (breakdownToUse[key]['baseValue']) {
-          f[key] = breakdownToUse[key]['baseValue'];
+      const forbiddenAttributes = [];
+
+      if (exclusive[trait]) {
+        Object.keys(exclusive[trait]).forEach(attr => {
+          Object.keys(exclusive[trait][attr]).forEach(exclusiveTrait => {
+            if (
+              exclusiveTrait in tmp &&
+              !exclusive[trait][attr][exclusiveTrait].includes(
+                tmp[exclusiveTrait],
+              )
+            ) {
+              forbiddenAttributes.push(attr);
+            }
+          });
+        });
+      }
+
+      forbiddenAttributes.forEach(forbiddenAttribute => {
+        const probability = breakdownToUse[forbiddenAttribute];
+        delete breakdownToUse[forbiddenAttribute];
+        const attributes = Object.keys(breakdownToUse);
+        const attributesRemaining = attributes.length;
+        const probabilityFraction = probability / attributesRemaining;
+        attributes.forEach(attr => {
+          breakdownToUse[attr] += probabilityFraction;
+        });
+      });
+
+      const formatted = Object.keys(breakdownToUse).reduce((f, attr) => {
+        if (breakdownToUse[attr]['baseValue']) {
+          f[attr] = breakdownToUse[attr]['baseValue'];
         } else {
-          f[key] = breakdownToUse[key];
+          f[attr] = breakdownToUse[attr];
         }
         return f;
       }, {});
 
-      assertValidBreakdown(formatted);
-      const randomSelection = weighted.select(formatted);
-      tmp[attr] = randomSelection;
+      const randomSelection = weighted.select(formatted, {
+        normal: false,
+      });
+
+      tmp[trait] = randomSelection;
     });
 
-    keys.forEach(attr => {
-      let breakdownToUse = breakdown[attr];
+    keys.forEach(trait => {
+      let breakdownToUse = breakdown[trait];
 
-      keys.forEach(otherAttr => {
+      keys.forEach(otherTrait => {
         if (
-          tmp[otherAttr] &&
-          typeof breakdown[otherAttr][tmp[otherAttr]] != 'number' &&
-          breakdown[otherAttr][tmp[otherAttr]][attr]
+          tmp[otherTrait] &&
+          typeof breakdown[otherTrait][tmp[otherTrait]] != 'number' &&
+          breakdown[otherTrait][tmp[otherTrait]][trait]
         ) {
-          breakdownToUse = breakdown[otherAttr][tmp[otherAttr]][attr];
+          breakdownToUse = breakdown[otherTrait][tmp[otherTrait]][trait];
 
           console.log(
-            'Because this item got attr',
-            tmp[otherAttr],
+            'Because this item got trait',
+            tmp[otherTrait],
             'we are using different probabilites for',
-            attr,
+            trait,
           );
 
           assertValidBreakdown(breakdownToUse);
           const randomSelection = weighted.select(breakdownToUse);
-          tmp[attr] = randomSelection;
+          tmp[trait] = randomSelection;
         }
       });
     });
 
-    Object.keys(tmp).forEach(attr1 => {
-      Object.keys(tmp).forEach(attr2 => {
+    Object.keys(tmp).forEach(trait1 => {
+      Object.keys(tmp).forEach(trait2 => {
         if (
-          dnp[attr1] &&
-          dnp[attr1][tmp[attr1]] &&
-          dnp[attr1][tmp[attr1]][attr2] &&
-          dnp[attr1][tmp[attr1]][attr2].includes(tmp[attr2])
+          dnp[trait1] &&
+          dnp[trait1][tmp[trait1]] &&
+          dnp[trait1][tmp[trait1]][trait2] &&
+          dnp[trait1][tmp[trait1]][trait2].includes(tmp[trait2])
         ) {
-          console.log('Not including', tmp[attr1], tmp[attr2], 'together');
+          console.log('Not including', tmp[trait1], tmp[trait2], 'together');
           valid = false;
           tmp = {};
         }
       });
     });
   } while (!valid);
+  console.log(tmp);
   return tmp;
 };
 

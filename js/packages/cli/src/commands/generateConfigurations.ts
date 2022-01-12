@@ -1,36 +1,17 @@
 import fs from 'fs';
 import log from 'loglevel';
 import path from 'path';
+import { readJsonFile } from '../helpers/various';
 // import { generateRandoms } from '../helpers/various';
 
 const { readdir, writeFile } = fs.promises;
 
 export async function generateConfigurations(
+  baseConfigLocation: string,
   traits: string[],
 ): Promise<boolean> {
   let generateSuccessful: boolean = true;
-  const configs = {
-    name: 'GODz',
-    symbol: '',
-    description: '',
-    creators: [],
-    dnp: {},
-    premadeCustoms: [],
-    collection: {},
-    breakdown: {},
-    order: [
-      'background',
-      'accessory',
-      'base',
-      'clothing',
-      'eyes',
-      'mouth',
-      'head',
-      'arms',
-    ],
-    width: 2604,
-    height: 3282,
-  };
+  const configs = await readJsonFile(baseConfigLocation);
 
   try {
     await Promise.all(
@@ -47,18 +28,8 @@ export async function generateConfigurations(
         // console.log(attributes);
 
         const tmp = {};
-        let totalProbability = 1;
-        let total = attributes.length;
-        if (attributes.includes('none.png')) {
-          totalProbability = 0.75;
-          total -= 1;
-        }
         attributes.forEach(attr => {
-          if (attr === 'none.png') {
-            tmp[attr] = 0.25;
-          } else {
-            tmp[attr] = totalProbability / total;
-          }
+          tmp[attr] = 1 / attributes.length;
         });
 
         configs['breakdown'][trait] = tmp;

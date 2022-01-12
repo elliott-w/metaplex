@@ -1,0 +1,62 @@
+{
+    "name": "GODz",
+    "symbol": "GODz Symbol",
+    "description": "GODz description",
+    "creators": [
+        {
+            "address": "DDqXAwWSasQBYMzxh8C6vcm9bJpB5Q6F2KgJTYMqHWhx",
+            "share": 100
+        }
+    ],
+    "seller_fee_basis_points": 0,
+    "dnp": {
+        "base": {
+            "Aether.png": {
+                "accessory": [
+                    "Ancient Barrier.png"
+                ]
+            }
+        }
+    },
+    "exclusive": {
+        "accessory": {
+            "Ancient Barrier.png": {
+                "base": [
+                    "Aether.png"
+                ]
+            }
+        }
+    },
+    "premadeCustoms": [],
+    "collection": {
+        "name": "GODz Seed Launch",
+        "family": "GODz"
+    },
+    "breakdown": {
+        "accessory": {
+            "none.png": 0.25
+        }
+    },
+    "order": [
+        "background",
+        "accessory",
+        "base",
+        "clothing",
+        "eyes",
+        "mouth",
+        "head",
+        "arms"
+    ],
+    "probabilityOrder": [
+        "base",
+        "background",
+        "accessory",
+        "clothing",
+        "eyes",
+        "mouth",
+        "head",
+        "arms"
+    ],
+    "width": 2604,
+    "height": 3282
+}

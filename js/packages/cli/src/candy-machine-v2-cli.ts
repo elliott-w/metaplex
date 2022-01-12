@@ -903,10 +903,16 @@ programCommand('generate_art_configurations')
   .argument('<directory>', 'Directory containing traits named from 0-n', val =>
     fs.readdirSync(`${val}`),
   )
-  .action(async (files: string[]) => {
+  .option(
+    '-c, --base-config-location <string>',
+    'Location of the traits configuration file',
+    './base-traits-configuration.json',
+  )
+  .action(async (files: string[], options, cmd) => {
+    const { baseConfigLocation } = cmd.opts();
     log.info('creating traits configuration file');
     const startMs = Date.now();
-    const successful = await generateConfigurations(files);
+    const successful = await generateConfigurations(baseConfigLocation, files);
     const endMs = Date.now();
     const timeTaken = new Date(endMs - startMs).toISOString().substr(11, 8);
     if (successful) {
