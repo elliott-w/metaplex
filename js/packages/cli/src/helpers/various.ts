@@ -8,6 +8,7 @@ import { StorageType } from './storage-type';
 import { getAtaForMint } from './accounts';
 import { CLUSTERS, DEFAULT_CLUSTER } from './constants';
 import _ from 'lodash';
+import { Uses, UseMethod } from '@metaplex-foundation/mpl-token-metadata';
 
 const { readFile } = fs.promises;
 
@@ -132,12 +133,18 @@ export async function getCandyMachineV2Config(
 
     wallet = new web3.PublicKey(splTokenAccountKey);
     parsedPrice = price * 10 ** mintInfo.decimals;
-    if (whitelistMintSettings?.discountPrice) {
+    if (
+      whitelistMintSettings?.discountPrice ||
+      whitelistMintSettings?.discountPrice === 0
+    ) {
       whitelistMintSettings.discountPrice *= 10 ** mintInfo.decimals;
     }
   } else {
     parsedPrice = price * 10 ** 9;
-    if (whitelistMintSettings?.discountPrice) {
+    if (
+      whitelistMintSettings?.discountPrice ||
+      whitelistMintSettings?.discountPrice === 0
+    ) {
       whitelistMintSettings.discountPrice *= 10 ** 9;
     }
     wallet = solTreasuryAccount
@@ -147,7 +154,10 @@ export async function getCandyMachineV2Config(
 
   if (whitelistMintSettings) {
     whitelistMintSettings.mint = new web3.PublicKey(whitelistMintSettings.mint);
-    if (whitelistMintSettings?.discountPrice) {
+    if (
+      whitelistMintSettings?.discountPrice ||
+      whitelistMintSettings?.discountPrice === 0
+    ) {
       whitelistMintSettings.discountPrice = new BN(
         whitelistMintSettings.discountPrice,
       );
@@ -543,4 +553,15 @@ export function getCluster(name: string): string {
     }
   }
   return DEFAULT_CLUSTER.url;
+}
+
+export function parseUses(useMethod: string, total: number): Uses | null {
+  if (!!useMethod && !!total) {
+    const realUseMethod = (UseMethod as any)[useMethod];
+    if (!realUseMethod) {
+      throw new Error(`Invalid use method: ${useMethod}`);
+    }
+    return new Uses({ useMethod: realUseMethod, total, remaining: total });
+  }
+  return null;
 }
