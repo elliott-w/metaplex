@@ -27,16 +27,33 @@
             }
         }
     },
+    "orderExceptions": [
+        {
+            "order": [
+                "background",
+                "accessory",
+                "base",
+                "arms",
+                "clothing",
+                "eyes",
+                "mouth",
+                "head"
+            ],
+            "conditions": [
+                {
+                    "arms": [
+                        "Bandaged.png"
+                    ]
+                }
+            ]
+        }
+    ],
     "premadeCustoms": [],
     "collection": {
         "name": "GODz Seed Launch",
         "family": "GODz"
     },
-    "breakdown": {
-        "accessory": {
-            "none.png": 0.25
-        }
-    },
+    "breakdown": {},
     "order": [
         "background",
         "accessory",

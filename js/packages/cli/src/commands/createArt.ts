@@ -8,9 +8,9 @@ import log from 'loglevel';
 import { readJsonFile } from '../helpers/various';
 import { ASSETS_DIRECTORY, TRAITS_DIRECTORY } from '../helpers/metadata';
 
-function makeCreateImageWithCanvas(order, width, height) {
+function makeCreateImageWithCanvas(width, height) {
   return function makeCreateImage(canvas, context) {
-    return async function createImage(image) {
+    return async function createImage({ image, order }) {
       const start = Date.now();
       const ID = parseInt(image.id, 10) - 1;
       for (const cur of order) {
@@ -52,10 +52,38 @@ export async function createGenerativeArt(
   randomizedSets,
 ) {
   const start = Date.now();
-  const { order, width, height } = await readJsonFile(configLocation);
-  const makeCreateImage = makeCreateImageWithCanvas(order, width, height);
+  const { order, orderExceptions, width, height } = await readJsonFile(
+    configLocation,
+  );
+
+  const makeCreateImage = makeCreateImageWithCanvas(width, height);
 
   const imagesNb = randomizedSets.length;
+
+  const next = () => {
+    const image = randomizedSets.pop();
+    if (typeof image === 'undefined') {
+      return false;
+    }
+    let theOrder = order;
+    for (const orderException of orderExceptions) {
+      for (const condition of orderException.conditions) {
+        const allTraitsInConditionSatisfied = Object.keys(condition)
+          .map(trait => {
+            return condition[trait].includes(image[trait]);
+          })
+          .reduce((a, b) => a && b);
+        if (allTraitsInConditionSatisfied) {
+          theOrder = orderException.order;
+          break;
+        }
+      }
+    }
+    return {
+      image: image,
+      order: theOrder,
+    };
+  };
 
   const workers = [];
   const workerNb = Math.min(CONCURRENT_WORKERS, imagesNb);
@@ -64,7 +92,7 @@ export async function createGenerativeArt(
     const canvas = createCanvas(width, height);
     const context = canvas.getContext('2d');
     const work = makeCreateImage(canvas, context);
-    const w = worker(work, randomizedSets.pop.bind(randomizedSets));
+    const w = worker(work, next);
     workers.push(w());
   }
 
