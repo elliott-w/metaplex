@@ -955,7 +955,7 @@ program
 
     // 1. generate the metadata json files
     const randomSets = await createMetadataFiles(
-      numberOfImages,
+      parseInt(numberOfImages, 10),
       configLocation,
       treatAttributesAsFileNames == 'true',
     );

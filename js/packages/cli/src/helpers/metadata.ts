@@ -1,4 +1,5 @@
 import fs from 'fs';
+import path from 'path';
 import log from 'loglevel';
 import _ from 'lodash';
 import {
@@ -8,13 +9,13 @@ import {
   shuffle,
 } from './various';
 
-const { writeFile, mkdir } = fs.promises;
+const { writeFile, mkdir, readdir } = fs.promises;
 
 export const ASSETS_DIRECTORY = './assets';
 export const TRAITS_DIRECTORY = './traits';
 
 export async function createMetadataFiles(
-  numberOfImages: string,
+  numberOfImages: number,
   configLocation: string,
   treatAttributesAsFileNames: boolean,
 ): Promise<any[]> {
@@ -39,16 +40,28 @@ export async function createMetadataFiles(
     collection,
     dnp,
     exclusive,
-    premadeCustoms,
+    // premadeCustoms,
     probabilityOrder,
   } = await readJsonFile(configLocation);
 
-  while (numberOfFilesCreated < premadeCustoms.length) {
-    randomizedSets.push(premadeCustoms[numberOfFilesCreated]);
-    numberOfFilesCreated += 1;
-  }
+  const assetFiles = await readdir(ASSETS_DIRECTORY);
+  const presentIndices = assetFiles
+    .filter(file => {
+      return path.extname(file).toLowerCase() === '.json';
+    })
+    .map(file => {
+      return parseInt(path.basename(file), 10);
+    });
+  const allIndices = [...Array(numberOfImages).keys()];
+  const missingIndices = allIndices.filter(i => !presentIndices.includes(i));
+  console.log(missingIndices);
 
-  while (numberOfFilesCreated < parseInt(numberOfImages, 10)) {
+  // while (numberOfFilesCreated < premadeCustoms.length) {
+  //   randomizedSets.push(premadeCustoms[numberOfFilesCreated]);
+  //   numberOfFilesCreated += 1;
+  // }
+
+  while (numberOfFilesCreated < missingIndices.length) {
     const randomizedSet = generateRandomSet(
       breakdown,
       probabilityOrder,
@@ -57,14 +70,18 @@ export async function createMetadataFiles(
     );
 
     if (!_.some(randomizedSets, randomizedSet)) {
-      randomizedSets.push(randomizedSet);
+      randomizedSets.push({
+        id: missingIndices[numberOfFilesCreated] + 1,
+        set: randomizedSet,
+      });
       numberOfFilesCreated += 1;
     }
   }
 
   const shuffled = shuffle(randomizedSets);
 
-  for (let i = 0; i < shuffled.length; i++) {
+  for (const key of missingIndices.keys()) {
+    const i = missingIndices[key];
     const metadata = getMetadata(
       name,
       symbol,
@@ -72,7 +89,7 @@ export async function createMetadataFiles(
       creators,
       description,
       seller_fee_basis_points,
-      shuffled[i],
+      shuffled[key].set,
       collection,
       treatAttributesAsFileNames,
     );
@@ -87,11 +104,12 @@ export async function createMetadataFiles(
     }
   }
 
-  // map through after because IDs would make sets unique
-  const randomSetWithIds = shuffled.map((item, index) => ({
-    id: index + 1,
-    ...item,
-  }));
+  const randomizedSetsWithIds = shuffled.map(randomizedSet => {
+    return {
+      id: randomizedSet.id,
+      ...randomizedSet.set,
+    };
+  });
 
-  return randomSetWithIds;
+  return randomizedSetsWithIds;
 }
