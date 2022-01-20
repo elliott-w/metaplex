@@ -7,8 +7,8 @@
     "metaplex": "./build/candy-machine-cli.js"
   },
   "scripts": {
-    "generate": "node ./build/candy-machine-v2-cli.js create_generative_art -k ./random.json -n",
-    "config": "node ./build/candy-machine-v2-cli.js generate_art_configurations traits -k ./random.json",
+    "generate": "node ./build/candy-machine-v2-cli.js create_generative_art -ta true -n",
+    "config": "node ./build/candy-machine-v2-cli.js generate_art_configurations traits",
     "prune": "find ./assets -name \"*.json\" -type f -delete",
     "metaplex": "node ./build/candy-machine-cli.js",
     "build": "tsc -p ./src",
