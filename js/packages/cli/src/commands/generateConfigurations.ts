@@ -26,13 +26,14 @@ export async function generateConfigurations(
           .map(dirent => dirent.name);
         // const randoms = generateRandoms(attributes.length - 1);
         // console.log(attributes);
-
-        const tmp = {};
+        if (!(trait in configs['breakdown'])) {
+          configs['breakdown'][trait] = {};
+        }
         attributes.forEach(attr => {
-          tmp[attr] = 1;
+          if (!(attr in configs['breakdown'][trait])) {
+            configs['breakdown'][trait][attr] = 1;
+          }
         });
-
-        configs['breakdown'][trait] = tmp;
       }),
     );
   } catch (err) {
