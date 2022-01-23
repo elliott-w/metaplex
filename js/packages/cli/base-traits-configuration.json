@@ -30,7 +30,7 @@
                 "Arms": [
                     "Frozen Handz.png"
                 ],
-                "Clothing": [
+                "Body": [
                     "Frozen Body.png"
                 ]
             },
@@ -38,7 +38,7 @@
                 "Arms": [
                     "Wooden Gauntlets.png"
                 ],
-                "Clothing": [
+                "Body": [
                     "Gaia's Cape.png",
                     "Wooden Armour.png"
                 ]
@@ -50,7 +50,7 @@
                 "Eyes": [
                     "Skull.png"
                 ],
-                "Clothing": [
+                "Body": [
                     "Zombie Body.png"
                 ],
                 "Mouth": [
@@ -68,7 +68,7 @@
                 ]
             },
             "Psyche.png": {
-                "Clothing": [
+                "Body": [
                     "Voodoo Belt.png",
                     "Symbiote.png"
                 ]
@@ -82,7 +82,7 @@
                 "Accessory",
                 "Domain",
                 "Arms",
-                "Clothing",
+                "Body",
                 "Eyes",
                 "Mouth",
                 "Head",
@@ -108,7 +108,7 @@
             "order": [
                 "Background",
                 "Domain",
-                "Clothing",
+                "Body",
                 "Eyes",
                 "Mouth",
                 "Head",
@@ -499,7 +499,7 @@
         "Background",
         "Accessory",
         "Domain",
-        "Clothing",
+        "Body",
         "Eyes",
         "Mouth",
         "Head",
@@ -510,7 +510,7 @@
         "Domain",
         "Background",
         "Accessory",
-        "Clothing",
+        "Body",
         "Eyes",
         "Mouth",
         "Head",
