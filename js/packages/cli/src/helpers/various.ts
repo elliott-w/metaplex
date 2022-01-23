@@ -260,20 +260,19 @@ export const generateRandomSet = (
 
       const forbiddenAttributes = [];
 
-      if (exclusive[trait]) {
-        Object.keys(exclusive[trait]).forEach(attr => {
-          Object.keys(exclusive[trait][attr]).forEach(exclusiveTrait => {
-            if (
-              exclusiveTrait in tmp &&
-              !exclusive[trait][attr][exclusiveTrait].includes(
-                tmp[exclusiveTrait],
-              )
-            ) {
-              forbiddenAttributes.push(attr);
+      Object.keys(exclusive).forEach(_trait => {
+        if (_trait in tmp) {
+          Object.keys(exclusive[_trait]).forEach(attr => {
+            if (tmp[_trait] != attr) {
+              if (trait in exclusive[_trait][attr]) {
+                for (const exclusiveAttr of exclusive[_trait][attr][trait]) {
+                  forbiddenAttributes.push(exclusiveAttr);
+                }
+              }
             }
           });
-        });
-      }
+        }
+      });
 
       if (!currentBreakdown[trait]) {
         currentBreakdown[trait] = {};
@@ -288,11 +287,7 @@ export const generateRandomSet = (
         });
       }
 
-      if (trait == 'Domain' && forbiddenAttributes) {
-        console.log(forbiddenAttributes);
-      }
-
-      if (forbiddenAttributes.length == Object.keys(breakdown[trait]).length) {
+      if (forbiddenAttributes.length >= Object.keys(breakdown[trait]).length) {
         throw new Error(`All attributes for ${trait} are forbidden`);
       }
 

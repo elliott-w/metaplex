@@ -54,6 +54,7 @@ export async function createMetadataFiles(
   const presentIndices = jsonFiles.map(file => {
     return parseInt(path.basename(file), 10);
   });
+  console.log(`Discovered ${presentIndices.length} existing NFTs.`);
   const premadeCustomsIndices = [...Array(premadeCustoms.length).keys()];
 
   // If premadeCustoms have not been generated
@@ -70,7 +71,6 @@ export async function createMetadataFiles(
   const allIndices = [...Array(numberOfImages).keys()];
   const missingIndices = allIndices.filter(i => !presentIndices.includes(i));
 
-  console.log(`Discovered ${presentIndices.length} existing NFTs.`);
   if (missingIndices.length > 0) {
     console.log(
       `Generating ${missingIndices.length} NFTs to fill the empty slots.`,
