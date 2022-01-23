@@ -9,20 +9,68 @@
         }
     ],
     "seller_fee_basis_points": 0,
-    "dnp": {
-        "base": {
-            "Aether.png": {
-                "accessory": [
-                    "Ancient Barrier.png"
-                ]
-            }
-        }
-    },
+    "dnp": {},
     "exclusive": {
-        "accessory": {
-            "Ancient Barrier.png": {
-                "base": [
-                    "Aether.png"
+        "base": {
+            "Pyro.png": {
+                "head": [
+                    "Flame On.png"
+                ],
+                "arms": [
+                    "Burning Fists.png"
+                ],
+                "accessory": [
+                    "fire bender ?????????"
+                ]
+            },
+            "Hydro.png": {
+                "head": [
+                    "Frozen Head.png"
+                ],
+                "arms": [
+                    "Frozen Handz.png"
+                ],
+                "clothing": [
+                    "Frozen Body.png"
+                ]
+            },
+            "Anima.png": {
+                "arms": [
+                    "Wooden Gauntlets.png"
+                ],
+                "clothing": [
+                    "Gaia's cape.png",
+                    "Wooden Armour.png"
+                ]
+            },
+            "Vigor.png": {
+                "arms": [
+                    "Zombie.png"
+                ],
+                "eyes": [
+                    "Skull.png"
+                ],
+                "clothing": [
+                    "Zombie Body.png"
+                ],
+                "mouth": [
+                    "Zombie.png"
+                ]
+            },
+            "Shade.png": {
+                "head": [
+                    "Legolas Hair.png"
+                ]
+            },
+            "Celestial.png": {
+                "arms": [
+                    "Galaxy Charge.png"
+                ]
+            },
+            "Psyche.png": {
+                "clothing": [
+                    "Voodoo Belt.png",
+                    "Symbiote.png"
                 ]
             }
         }
@@ -42,7 +90,15 @@
             "conditions": [
                 {
                     "arms": [
-                        "Bandaged.png"
+                        "Ape.png",
+                        "Bandaged.png",
+                        "Yingyang Fists.png",
+                        "Haki.png",
+                        "Danzo.png",
+                        "Frozen Handz.png",
+                        "Mutated Arm.png",
+                        "Tentacles.png",
+                        "Red Gauntlets.png"
                     ]
                 }
             ]
