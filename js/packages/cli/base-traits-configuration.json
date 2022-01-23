@@ -1,14 +1,14 @@
 {
-    "name": "GODz #",
+    "name": "Godz #",
     "symbol": "",
-    "description": "888 Seed GODz have returned after Millenia. To right their wrongdoings and bring peace to the world of Mortalz.",
+    "description": "GODz description",
     "creators": [
         {
-            "address": "9Q1YZTN6JkMpLM5qNr1NG4pjqBnezS39fVJdHjRGhLAJ",
+            "address": "DDqXAwWSasQBYMzxh8C6vcm9bJpB5Q6F2KgJTYMqHWhx",
             "share": 100
         }
     ],
-    "seller_fee_basis_points": 600,
+    "seller_fee_basis_points": 0,
     "dnp": {},
     "exclusive": {
         "Domain": {
@@ -125,7 +125,17 @@
             ]
         }
     ],
-    "premadeCustoms": [],
+    "premadeCustoms": [{
+        "Domain": "Vigor.png",
+        "Background": "Sakura.png",
+        "Accessory": "Ancient Barrier.png",
+        "Body": "Tanjiro's Robe.png",
+        "Eyes": "Fujin Browz.png",
+        "Mouth": "Vampire.png",
+        "Head": "Raiden's Hat.png",
+        "Arms": "Heavenly Harp.png",
+        "Symbol": "XVIII.png"
+    }],
     "collection": {
         "name": "GODz Seed Launch",
         "family": "GODz"
