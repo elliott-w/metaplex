@@ -21,7 +21,6 @@ export async function createMetadataFiles(
   configLocation: string,
   treatAttributesAsFileNames: boolean,
 ): Promise<any[]> {
-  let numberOfFilesCreated: number = 0;
   const randomizedSets = [];
 
   if (!fs.existsSync(ASSETS_DIRECTORY)) {
@@ -65,12 +64,12 @@ export async function createMetadataFiles(
         set: premadeCustoms[i],
       });
       presentIndices.push(i);
-      numberOfFilesCreated += 1;
     }
   }
 
   const allIndices = [...Array(numberOfImages).keys()];
   const missingIndices = allIndices.filter(i => !presentIndices.includes(i));
+
   console.log(`Discovered ${presentIndices.length} existing NFTs.`);
   if (missingIndices.length > 0) {
     console.log(
@@ -107,7 +106,8 @@ export async function createMetadataFiles(
     });
   }
 
-  while (numberOfFilesCreated < missingIndices.length) {
+  let i = 0;
+  while (i < missingIndices.length) {
     const randomizedSet = generateRandomSet(
       breakdown,
       currentBreakdown,
@@ -119,10 +119,10 @@ export async function createMetadataFiles(
 
     if (!_.some(randomizedSets, randomizedSet)) {
       randomizedSets.push({
-        id: missingIndices[numberOfFilesCreated] + 1,
+        id: missingIndices[i] + 1,
         set: randomizedSet,
       });
-      numberOfFilesCreated += 1;
+      i += 1;
     }
   }
 
@@ -149,7 +149,7 @@ export async function createMetadataFiles(
         JSON.stringify(metadata),
       );
     } catch (err) {
-      log.error(`${numberOfFilesCreated} failed to get created`, err);
+      log.error(`${randomizedSet.id} failed to get created`, err);
     }
   }
 
@@ -160,6 +160,5 @@ export async function createMetadataFiles(
     };
   });
 
-  console.log(randomizedSetsWithIds);
   return randomizedSetsWithIds;
 }
