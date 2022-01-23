@@ -11,64 +11,64 @@
     "seller_fee_basis_points": 0,
     "dnp": {},
     "exclusive": {
-        "base": {
+        "Domain": {
             "Pyro.png": {
-                "head": [
+                "Head": [
                     "Flame On.png"
                 ],
-                "arms": [
+                "Arms": [
                     "Burning Fists.png"
                 ],
-                "accessory": [
-                    "fire bender ?????????"
+                "Accessory": [
+                    "Fire Bender.png"
                 ]
             },
             "Hydro.png": {
-                "head": [
+                "Head": [
                     "Frozen Head.png"
                 ],
-                "arms": [
+                "Arms": [
                     "Frozen Handz.png"
                 ],
-                "clothing": [
+                "Clothing": [
                     "Frozen Body.png"
                 ]
             },
             "Anima.png": {
-                "arms": [
+                "Arms": [
                     "Wooden Gauntlets.png"
                 ],
-                "clothing": [
+                "Clothing": [
                     "Gaia's cape.png",
                     "Wooden Armour.png"
                 ]
             },
             "Vigor.png": {
-                "arms": [
+                "Arms": [
                     "Zombie.png"
                 ],
-                "eyes": [
+                "Eyes": [
                     "Skull.png"
                 ],
-                "clothing": [
+                "Clothing": [
                     "Zombie Body.png"
                 ],
-                "mouth": [
+                "Mouth": [
                     "Zombie.png"
                 ]
             },
             "Shade.png": {
-                "head": [
+                "Head": [
                     "Legolas Hair.png"
                 ]
             },
             "Celestial.png": {
-                "arms": [
+                "Arms": [
                     "Galaxy Charge.png"
                 ]
             },
             "Psyche.png": {
-                "clothing": [
+                "Clothing": [
                     "Voodoo Belt.png",
                     "Symbiote.png"
                 ]
@@ -78,18 +78,18 @@
     "orderExceptions": [
         {
             "order": [
-                "background",
-                "accessory",
-                "base",
-                "arms",
-                "clothing",
-                "eyes",
-                "mouth",
-                "head"
+                "Background",
+                "Accessory",
+                "Domain",
+                "Arms",
+                "Clothing",
+                "Eyes",
+                "Mouth",
+                "Head"
             ],
             "conditions": [
                 {
-                    "arms": [
+                    "Arms": [
                         "Ape.png",
                         "Bandaged.png",
                         "Yingyang Fists.png",
@@ -111,24 +111,24 @@
     },
     "breakdown": {},
     "order": [
-        "background",
-        "accessory",
-        "base",
-        "clothing",
-        "eyes",
-        "mouth",
-        "head",
-        "arms"
+        "Background",
+        "Accessory",
+        "Domain",
+        "Clothing",
+        "Eyes",
+        "Mouth",
+        "Head",
+        "Arms"
     ],
     "probabilityOrder": [
-        "base",
-        "background",
-        "accessory",
-        "clothing",
-        "eyes",
-        "mouth",
-        "head",
-        "arms"
+        "Domain",
+        "Background",
+        "Accessory",
+        "Clothing",
+        "Eyes",
+        "Mouth",
+        "Head",
+        "Arms"
     ],
     "width": 2604,
     "height": 3282
