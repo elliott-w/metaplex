@@ -243,6 +243,8 @@ export const assertValidBreakdown = breakdown => {
 
 export const generateRandomSet = (
   breakdown,
+  currentBreakdown,
+  exactTraitBreakdowns,
   probabilityOrder,
   dnp,
   exclusive,
@@ -271,6 +273,27 @@ export const generateRandomSet = (
             }
           });
         });
+      }
+
+      if (!currentBreakdown[trait]) {
+        currentBreakdown[trait] = {};
+      }
+      if (exactTraitBreakdowns.includes(trait)) {
+        Object.keys(breakdown[trait]).forEach(attr => {
+          if (attr in currentBreakdown[trait]) {
+            if (currentBreakdown[trait][attr] >= breakdown[trait][attr]) {
+              forbiddenAttributes.push(attr);
+            }
+          }
+        });
+      }
+
+      if (trait == 'Domain' && forbiddenAttributes) {
+        console.log(forbiddenAttributes);
+      }
+
+      if (forbiddenAttributes.length == Object.keys(breakdown[trait]).length) {
+        throw new Error(`All attributes for ${trait} are forbidden`);
       }
 
       forbiddenAttributes.forEach(forbiddenAttribute => {
@@ -318,7 +341,7 @@ export const generateRandomSet = (
             trait,
           );
 
-          assertValidBreakdown(breakdownToUse);
+          // assertValidBreakdown(breakdownToUse);
           const randomSelection = weighted.select(breakdownToUse);
           tmp[trait] = randomSelection;
         }
@@ -340,6 +363,15 @@ export const generateRandomSet = (
       });
     });
   } while (!valid);
+
+  Object.keys(tmp).forEach(trait => {
+    const attr = tmp[trait];
+    if (!currentBreakdown[trait][attr]) {
+      currentBreakdown[trait][attr] = 0;
+    }
+    currentBreakdown[trait][attr] += 1;
+  });
+
   return tmp;
 };
 

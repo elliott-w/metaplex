@@ -130,6 +130,9 @@
         "name": "GODz Seed Launch",
         "family": "GODz"
     },
+    "exactTraitBreakdowns": [
+        "Domain"
+    ],
     "breakdown": {},
     "order": [
         "Background",

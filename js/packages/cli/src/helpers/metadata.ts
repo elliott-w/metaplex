@@ -32,6 +32,7 @@ export async function createMetadataFiles(
 
   const {
     breakdown,
+    exactTraitBreakdowns,
     name,
     symbol,
     creators,
@@ -45,25 +46,55 @@ export async function createMetadataFiles(
   } = await readJsonFile(configLocation);
 
   const assetFiles = await readdir(ASSETS_DIRECTORY);
-  const presentIndices = assetFiles
-    .filter(file => {
-      return path.extname(file).toLowerCase() === '.json';
-    })
-    .map(file => {
-      return parseInt(path.basename(file), 10);
-    });
+  const jsonFiles = assetFiles.filter(file => {
+    return path.extname(file).toLowerCase() === '.json';
+  });
+  const presentIndices = jsonFiles.map(file => {
+    return parseInt(path.basename(file), 10);
+  });
   const allIndices = [...Array(numberOfImages).keys()];
   const missingIndices = allIndices.filter(i => !presentIndices.includes(i));
-  console.log(missingIndices);
+  console.log(`Discovered ${presentIndices.length} existing NFTs.`);
+  if (missingIndices.length > 0) {
+    console.log(
+      `Generating ${missingIndices.length} NFTs to fill the empty slots.`,
+    );
+  } else {
+    console.log(`Skipping NFT image generation, no missing slots found.`);
+  }
 
   // while (numberOfFilesCreated < premadeCustoms.length) {
   //   randomizedSets.push(premadeCustoms[numberOfFilesCreated]);
   //   numberOfFilesCreated += 1;
   // }
 
+  const currentBreakdown = {};
+
+  for (const jsonFile of jsonFiles) {
+    const { attributes } = await readJsonFile(
+      path.join(ASSETS_DIRECTORY, jsonFile),
+    );
+    attributes.forEach(obj => {
+      const trait = obj['trait_type'];
+      let attr = obj['value'];
+      if (!attr.includes('.png')) {
+        attr += '.png';
+      }
+      if (!currentBreakdown[trait]) {
+        currentBreakdown[trait] = {};
+      }
+      if (!currentBreakdown[trait][attr]) {
+        currentBreakdown[trait][attr] = 0;
+      }
+      currentBreakdown[trait][attr] += 1;
+    });
+  }
+
   while (numberOfFilesCreated < missingIndices.length) {
     const randomizedSet = generateRandomSet(
       breakdown,
+      currentBreakdown,
+      exactTraitBreakdowns,
       probabilityOrder,
       dnp,
       exclusive,
