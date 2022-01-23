@@ -85,7 +85,8 @@
                 "Clothing",
                 "Eyes",
                 "Mouth",
-                "Head"
+                "Head",
+                "Symbol"
             ],
             "conditions": [
                 {
@@ -112,7 +113,8 @@
                 "Mouth",
                 "Head",
                 "Arms",
-                "Accessory"
+                "Accessory",
+                "Symbol"
             ],
             "conditions": [
                 {
@@ -137,7 +139,8 @@
         "Eyes",
         "Mouth",
         "Head",
-        "Arms"
+        "Arms",
+        "Symbol"
     ],
     "probabilityOrder": [
         "Domain",
@@ -147,7 +150,8 @@
         "Eyes",
         "Mouth",
         "Head",
-        "Arms"
+        "Arms",
+        "Symbol"
     ],
     "width": 2604,
     "height": 3282
