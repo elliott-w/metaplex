@@ -506,7 +506,7 @@ export const getMetadata = (
   order: string[],
 ) => {
   const attributes = [];
-  for (const trait in order) {
+  for (const trait of order) {
     attributes.push({
       trait_type: trait,
       value: treatAttributesAsFileNames
