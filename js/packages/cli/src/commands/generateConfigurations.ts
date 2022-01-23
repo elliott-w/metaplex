@@ -29,7 +29,7 @@ export async function generateConfigurations(
 
         const tmp = {};
         attributes.forEach(attr => {
-          tmp[attr] = 1 / attributes.length;
+          tmp[attr] = 1;
         });
 
         configs['breakdown'][trait] = tmp;
