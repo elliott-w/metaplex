@@ -1,14 +1,14 @@
 {
-    "name": "Godz #",
+    "name": "GODz #",
     "symbol": "",
-    "description": "GODz description",
+    "description": "888 Seed GODz have returned after Millenia. To right their wrongdoings and bring peace to the world of Mortalz.",
     "creators": [
         {
-            "address": "DDqXAwWSasQBYMzxh8C6vcm9bJpB5Q6F2KgJTYMqHWhx",
+            "address": "9Q1YZTN6JkMpLM5qNr1NG4pjqBnezS39fVJdHjRGhLAJ",
             "share": 100
         }
     ],
-    "seller_fee_basis_points": 0,
+    "seller_fee_basis_points": 800,
     "dnp": {},
     "exclusive": {
         "Domain": {
