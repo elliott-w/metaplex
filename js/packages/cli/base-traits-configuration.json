@@ -102,6 +102,25 @@
                     ]
                 }
             ]
+        },
+        {
+            "order": [
+                "Background",
+                "Domain",
+                "Clothing",
+                "Eyes",
+                "Mouth",
+                "Head",
+                "Arms",
+                "Accessory"
+            ],
+            "conditions": [
+                {
+                    "Accessory": [
+                        "Fire Bender.png"
+                    ]
+                }
+            ]
         }
     ],
     "premadeCustoms": [],
