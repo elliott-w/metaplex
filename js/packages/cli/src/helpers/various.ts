@@ -503,14 +503,15 @@ export const getMetadata = (
   attrs,
   collection,
   treatAttributesAsFileNames: boolean,
+  order: string[],
 ) => {
   const attributes = [];
-  for (const prop in attrs) {
+  for (const trait in order) {
     attributes.push({
-      trait_type: prop,
+      trait_type: trait,
       value: treatAttributesAsFileNames
-        ? path.parse(attrs[prop]).name
-        : attrs[prop],
+        ? path.parse(attrs[trait]).name
+        : attrs[trait],
     });
   }
 

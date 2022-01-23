@@ -14,6 +14,8 @@ const { writeFile, mkdir, readdir } = fs.promises;
 export const ASSETS_DIRECTORY = './assets';
 export const TRAITS_DIRECTORY = './traits';
 
+const arraySubset = (arr, target) => target.every(v => arr.includes(v));
+
 export async function createMetadataFiles(
   numberOfImages: number,
   configLocation: string,
@@ -41,7 +43,8 @@ export async function createMetadataFiles(
     collection,
     dnp,
     exclusive,
-    // premadeCustoms,
+    premadeCustoms,
+    order,
     probabilityOrder,
   } = await readJsonFile(configLocation);
 
@@ -52,6 +55,20 @@ export async function createMetadataFiles(
   const presentIndices = jsonFiles.map(file => {
     return parseInt(path.basename(file), 10);
   });
+  const premadeCustomsIndices = [...Array(premadeCustoms.length).keys()];
+
+  // If premadeCustoms have not been generated
+  if (!arraySubset(presentIndices, premadeCustomsIndices)) {
+    for (const i of premadeCustomsIndices) {
+      randomizedSets.push({
+        id: i + 1,
+        set: premadeCustoms[i],
+      });
+      presentIndices.push(i);
+      numberOfFilesCreated += 1;
+    }
+  }
+
   const allIndices = [...Array(numberOfImages).keys()];
   const missingIndices = allIndices.filter(i => !presentIndices.includes(i));
   console.log(`Discovered ${presentIndices.length} existing NFTs.`);
@@ -111,8 +128,8 @@ export async function createMetadataFiles(
 
   const shuffled = shuffle(randomizedSets);
 
-  for (const key of missingIndices.keys()) {
-    const i = missingIndices[key];
+  for (const randomizedSet of randomizedSets) {
+    const i = randomizedSet.id - 1;
     const metadata = getMetadata(
       name,
       symbol,
@@ -120,9 +137,10 @@ export async function createMetadataFiles(
       creators,
       description,
       seller_fee_basis_points,
-      shuffled[key].set,
+      randomizedSet.set,
       collection,
       treatAttributesAsFileNames,
+      order,
     );
 
     try {
@@ -142,5 +160,6 @@ export async function createMetadataFiles(
     };
   });
 
+  console.log(randomizedSetsWithIds);
   return randomizedSetsWithIds;
 }
