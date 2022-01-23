@@ -8,7 +8,7 @@
             "share": 100
         }
     ],
-    "seller_fee_basis_points": 800,
+    "seller_fee_basis_points": 600,
     "dnp": {},
     "exclusive": {
         "Domain": {
