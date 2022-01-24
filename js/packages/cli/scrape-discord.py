@@ -1,5 +1,11 @@
-# Scans messages from a text channel and retrieves the author id for
-# each message and writes those ids to the input/memberids.txt file
+# Scans messages from a discord text channel and treats each message 
+# as a solana wallet pubkey and saves to file in json format:
+# {
+#   "wallet1": 1,
+#   "wallet2": 1,
+#   "wallet3": 1,
+#   etc...
+# }
 
 the_channel_id = 'the_channel_id'
 my_api_token = 'my_api_token'
