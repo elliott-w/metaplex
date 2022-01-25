@@ -7,10 +7,11 @@
 #   etc...
 # }
 
-the_channel_id = 'the_channel_id'
-my_api_token = 'my_api_token'
+the_channel_id = ''
+my_api_token = ''
 start_scan_from_timestamp = None
 save_to_file = 'wallets.json'
+mods = []
 
 import discum
 from datetime import datetime
@@ -42,7 +43,7 @@ def get_and_process_next_chunk_of_messages(num_of_messages_per_chunk = 100):
         print(json.dumps(messages, indent=2, sort_keys=True))
         raise ValueError('API request failed')
 
-    if (len(messages) == 0):
+    if len(messages) == 0:
         raise NoMoreMessagesLeftToScan
     messages_scanned += len(messages)
     # sys.stdout.write("\rMessages scanned: %i" % messages_scanned)
@@ -54,36 +55,20 @@ def get_and_process_next_chunk_of_messages(num_of_messages_per_chunk = 100):
     discord_snowflake = bot.unixts_to_snowflake(unix_timestamp)
     last_message_date = discord_snowflake
 
-invalid_wallets = 0
-multiple_wallets = 0
-duplicate_wallets = 0
 member_wallets = {}
+invalid_wallets = 0
+
 def process_message(message):
     global member_wallets, invalid_wallets, duplicate_wallets, multiple_wallets
     member_id = message['author']['id']
     wallet = message['content']
     user = message['author']['username']
-    if (member_id in member_wallets and wallet == member_wallets[member_id]['wallet']):
-        duplicate_wallets += 1
-
-    if (member_id in member_wallets and wallet != member_wallets[member_id]['wallet']):
-        print("\nUser {} tried to submit wallet \n{}\nwhen they have already submitted\n{}\nOverriding with the latest wallet\n{}".format(user, wallet, member_wallets[member_id]['wallet'], wallet))
-        multiple_wallets += 1
-
-    try:
-        pubkey = publickey.PublicKey(wallet)
+    if member_id not in member_wallets:
         member_wallets[member_id] = {
-            "username": message['author']['username'],
-            "wallet": wallet,
+            "username": user,
+            "wallets": [],
         }
-    except ValueError:
-        print("\nUser {} tried to submit an invalid wallet\n{}".format(user, wallet))
-        invalid_wallets += 1
-        pass
-    except BaseException as err:
-        print(err)
-        invalid_wallets += 1
-        pass
+    member_wallets[member_id]['wallets'].append(wallet)
 
 try:
     while True:
@@ -96,16 +81,48 @@ except ValueError as err:
 except NoMoreMessagesLeftToScan:
     pass
 
-unique_wallets = {}
-for member_id, data in member_wallets.items():
-    if data['wallet'] in unique_wallets:
-        print("\nUsers {} and {} have tried to submit the following wallet twice\n{}".format(unique_wallets[data['wallet']]['username'], data['username'], data['wallet']))
-        duplicate_wallets += 1
-    else:
-        unique_wallets[data['wallet']] = {
-            "userid": member_id,
-            "username": data['username'] 
-        }
+
+multiple_wallets = 0
+duplicate_wallets = 0
+
+with open('log.txt', 'w+', encoding="utf-8") as log_file:
+    unique_wallets = {}
+    for member_id, data in member_wallets.items():
+        user = data['username']
+        wallets = data['wallets']
+        if member_id not in mods:
+            if len(wallets) > 1:
+                wallets = [wallets[-1]]
+                wallets_set = set(wallets)
+                if len(wallets_set) > 1:
+                    log_file.write("\nUser {} tried to submit multiple wallets\n".format(user))
+                    for wallet in wallets_set:
+                        log_file.write(wallet + "\n")
+                    log_file.write("Using the latest wallet\n")
+                    log_file.write(wallets[-1] + "\n")
+                    multiple_wallets += len(wallets) - 1
+                
+        for wallet in wallets:
+            try:
+                pubkey = publickey.PublicKey(wallet)
+                if wallet in unique_wallets:
+                    log_file.write("\nUsers {} and {} have tried to submit the same wallet\n".format(unique_wallets[wallet]['username'], user))
+                    log_file.write(wallet + "\n")
+                    duplicate_wallets += 1
+                else:
+                    unique_wallets[wallet] = {
+                        "userid": member_id,
+                        "username": data['username'] 
+                    }
+            except ValueError:
+                log_file.write("\nUser {} tried to submit an invalid wallet\n{}\n".format(user, wallet))
+                invalid_wallets += 1
+                pass
+            except BaseException as err:
+                print(err)
+                invalid_wallets += 1
+                pass
+
 
 print("\nFinished scanning {} messages".format(messages_scanned))
 
@@ -115,10 +132,21 @@ print("{} invalid wallets".format(invalid_wallets))
 print("{} multiple wallets".format(multiple_wallets))
 print("{} duplicate wallets".format(duplicate_wallets))
 
-# unique_wallets = set(unique_wallets.keys())
 wallets_json = {}
 for wallet in unique_wallets.keys():
     wallets_json[wallet] = 1
+
+whitelister_users_no_wallet_submitted = []
+with open('whitelist.txt', 'r') as file:
+    for member_id in file:
+        id = member_id.strip()
+        if id not in member_wallets:
+            whitelister_users_no_wallet_submitted.append(id)
+
+
+with open('whitelist-no-submit.txt', 'w+') as file:
+    for member_id in whitelister_users_no_wallet_submitted:
+        file.write(member_id + '\n')
 
 print("\nSaving {} unique wallets to file".format(len(unique_wallets)))
 
