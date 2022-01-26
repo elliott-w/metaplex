@@ -64,6 +64,15 @@ export async function createMetadataFiles(
         id: i + 1,
         set: premadeCustoms[i],
       });
+      Object.entries(premadeCustoms[i]).forEach(([trait, attr]) => {
+        if (!currentBreakdown[trait]) {
+          currentBreakdown[trait] = {};
+        }
+        if (!currentBreakdown[trait][attr]) {
+          currentBreakdown[trait][attr] = 0;
+        }
+        currentBreakdown[trait][attr] += 1;
+      });
       presentIndices.push(i);
     }
   }
