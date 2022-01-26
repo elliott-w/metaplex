@@ -9,7 +9,30 @@
         }
     ],
     "seller_fee_basis_points": 600,
-    "dnp": {},
+    "dnp": {
+        "Domain": {
+            "Anima.png": {
+                "Eyes": [
+                    "Emerald.png",
+                    "Witcher.png",
+                    "Bug.png",
+                    "Stoned.png",
+                    "Pure.png",
+                    "Sage.png",
+                    "Ninja.png",
+                    "Power.png",
+                    "Passion.png",
+                    "Shankz Scar.png",
+                    "Evil Eye.png"
+                ]
+            },
+            "Psyche.png": {
+                "Eyes": [
+                    "Face Paint.png"
+                ]
+            }
+        }
+    },
     "exclusive": {
         "Domain": {
             "Pyro.png": {
@@ -17,7 +40,8 @@
                     "Flame On.png"
                 ],
                 "Arms": [
-                    "Burning Fists.png"
+                    "Burning Fists.png",
+                    "Plasma.png"
                 ],
                 "Accessory": [
                     "Fire Bender.png"
@@ -73,6 +97,14 @@
                     "Symbiote.png"
                 ]
             }
+        },
+        "Head": {
+            "None.png": {
+                "Mouth": [
+                    "Ape.png",
+                    "Shiva's Snake.png"
+                ]
+            }
         }
     },
     "orderExceptions": [
@@ -120,6 +152,98 @@
                 {
                     "Accessory": [
                         "Fire Bender.png"
+                    ]
+                }
+            ]
+        },
+        {
+            "order": [
+                "Background",
+                "Accessory",
+                "Domain",
+                "Body",
+                "Head",
+                "Eyes",
+                "Mouth",
+                "Arms",
+                "Symbol"
+            ],
+            "conditions": [
+                {
+                    "Head": [
+                        "Goat Horns.png"
+                    ]
+                }
+            ]
+        },
+        {
+            "order": [
+                "Background",
+                "Accessory",
+                "Domain",
+                "Body",
+                "Eyes",
+                "Head",
+                "Mouth",
+                "Arms",
+                "Symbol"
+            ],
+            "conditions": [
+                {
+                    "Mouth": [
+                        "Dragon Pipe.png",
+                        "Smoke.png"
+                    ]
+                }
+            ]
+        },
+        {
+            "order": [
+                "Background",
+                "Accessory",
+                "Domain",
+                "Body",
+                "Mouth",
+                "Head",
+                "Eyes",
+                "Arms",
+                "Symbol"
+            ],
+            "conditions": [
+                {
+                    "Eyes": [
+                        "Master Roshi's Glasses.png",
+                        "Over 9000.png",
+                        "DYOR.png",
+                        "Cyclops.png",
+                        "Visor.png",
+                        "Thug Shadez.png",
+                        "Shadez.png",
+                        "Wizard Glasses.png",
+                        "Nerd Glasses.png",
+                        "Power.png",
+                        "Passion.png"
+                    ]
+                }
+            ]
+        },
+        {
+            "order": [
+                "Background",
+                "Accessory",
+                "Domain",
+                "Head",
+                "Body",
+                "Eyes",
+                "Mouth",
+                "Arms",
+                "Symbol"
+            ],
+            "conditions": [
+                {
+                    "Head": [
+                        "Puppet Master.png",
+                        "Reaper Hood.png"
                     ]
                 }
             ]
