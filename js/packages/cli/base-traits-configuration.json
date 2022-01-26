@@ -110,16 +110,10 @@
     "orderExceptions": [
         {
             "order": [
-                "Background",
-                "Accessory",
-                "Domain",
                 "Arms",
-                "Body",
-                "Eyes",
-                "Mouth",
-                "Head",
-                "Symbol"
+                "Body"
             ],
+            "elementToMove": "first",
             "conditions": [
                 {
                     "Arms": [
@@ -138,16 +132,10 @@
         },
         {
             "order": [
-                "Background",
-                "Domain",
-                "Body",
-                "Eyes",
-                "Mouth",
-                "Head",
-                "Arms",
-                "Accessory",
-                "Symbol"
+                "Symbol",
+                "Accessory"
             ],
+            "elementToMove": "second",
             "conditions": [
                 {
                     "Accessory": [
@@ -158,16 +146,10 @@
         },
         {
             "order": [
-                "Background",
-                "Accessory",
-                "Domain",
-                "Body",
                 "Head",
-                "Eyes",
-                "Mouth",
-                "Arms",
-                "Symbol"
+                "Eyes"
             ],
+            "elementToMove": "first",
             "conditions": [
                 {
                     "Head": [
@@ -178,37 +160,24 @@
         },
         {
             "order": [
-                "Background",
-                "Accessory",
-                "Domain",
-                "Body",
-                "Eyes",
                 "Head",
-                "Mouth",
-                "Arms",
-                "Symbol"
+                "Mouth"
             ],
+            "elementToMove": "second",
             "conditions": [
                 {
                     "Mouth": [
-                        "Dragon Pipe.png",
-                        "Smoke.png"
+                        "Dragon Pipe.png"
                     ]
                 }
             ]
         },
         {
             "order": [
-                "Background",
-                "Accessory",
-                "Domain",
-                "Body",
-                "Mouth",
                 "Head",
-                "Eyes",
-                "Arms",
-                "Symbol"
+                "Eyes"
             ],
+            "elementToMove": "second",
             "conditions": [
                 {
                     "Eyes": [
@@ -224,26 +193,130 @@
                         "Power.png",
                         "Passion.png"
                     ]
+                },
+                {
+                    "Head": [
+                        "Perfect Purple Hair.png",
+                        "Mutated Head.png",
+                        "Geralts Hair.png",
+                        "Julius.png",
+                        "Ancient Navigator.png",
+                        "Goat Horns.png",
+                        "Samurai Bun.png",
+                        "Samurai Hair.png",
+                        "Legolas Hair.png",
+                        "Man Bun.png",
+                        "Dreadlockz.png",
+                        "Super Saiyan Hair.png"
+                    ]
                 }
             ]
         },
         {
             "order": [
-                "Background",
-                "Accessory",
-                "Domain",
                 "Head",
-                "Body",
-                "Eyes",
-                "Mouth",
-                "Arms",
-                "Symbol"
+                "Eyes"
             ],
+            "elementToMove": "second",
+            "conditions": [
+                {
+                    "Eyes": [
+                        "Power.png",
+                        "Passion.png"
+                    ]
+                },
+                {
+                    "Head": [
+                        "Golden Eagle Warrior.png",
+                        "Bear Hood.png",
+                        "Handz Of The Fallen.png",
+                        "Mummified.png",
+                        "Rice Hat.png",
+                        "Joker.png",
+                        "Hermes.png",
+                        "Royal Fishman Guard.png",
+                        "Gladiator.png",
+                        "Puppet Master.png",
+                        "Meeko Helm.png",
+                        "Pantheon Helm.png"
+                    ]
+                }
+            ]
+        },
+        {
+            "order": [
+                "Head",
+                "Body"
+            ],
+            "elementToMove": "first",
             "conditions": [
                 {
                     "Head": [
                         "Puppet Master.png",
                         "Reaper Hood.png"
+                    ]
+                }
+            ]
+        },
+        {
+            "order": [
+                "Head",
+                "Mouth"
+            ],
+            "elementToMove": "second",
+            "conditions": [
+                {
+                    "Mouth": [
+                        "Smoke.png"
+                    ],
+                    "Head": [
+                        "Golden Eagle Warrior.png",
+                        "Bear Hood.png",
+                        "Handz Of The Fallen.png",
+                        "Mummified.png",
+                        "Rice Hat.png",
+                        "Joker.png",
+                        "Hermes.png",
+                        "Royal Fishman Guard.png",
+                        "Gladiator.png",
+                        "Puppet Master.png",
+                        "Meeko Helm.png",
+                        "Pantheon Helm.png"
+                    ]
+                }
+            ]
+        },
+        {
+            "order": [
+                "Mouth",
+                "Eyes"
+            ],
+            "elementToMove": "second",
+            "conditions": [
+                {
+                    "Eyes": [
+                        "Master Roshi's Glasses.png",
+                        "Over 9000.png",
+                        "DYOR.png",
+                        "Cyclops.png",
+                        "Visor.png",
+                        "Thug Shadez.png",
+                        "Shadez.png",
+                        "Wizard Glasses.png",
+                        "Nerd Glasses.png",
+                        "Power.png",
+                        "Passion.png"
+                    ]
+                },
+                {
+                    "Mouth": [
+                        "Ape.png",
+                        "Bane.png",
+                        "Bear.png",
+                        "Gas Mask.png",
+                        "Rebel.png",
+                        "Shiva's Snake.png",
+                        "Skeleton Face Mask.png"
                     ]
                 }
             ]
@@ -646,8 +719,8 @@
         "Accessory",
         "Body",
         "Eyes",
-        "Mouth",
         "Head",
+        "Mouth",
         "Arms",
         "Symbol"
     ],
