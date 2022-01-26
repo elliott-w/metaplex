@@ -47,6 +47,31 @@ const worker = (work, next_) => async () => {
   }
 };
 
+const arrayMove = (arr, old_index, new_index) => {
+  if (new_index >= arr.length) {
+    let k = new_index - arr.length + 1;
+    while (k--) {
+      arr.push(undefined);
+    }
+  }
+  arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
+  return arr; // for testing
+};
+
+const partialSort = (array, partialOrder, elementToMove) => {
+  const newOrder = array.slice();
+  const a = newOrder.indexOf(partialOrder[0]);
+  const b = newOrder.indexOf(partialOrder[1]);
+  if (a > b) {
+    if (elementToMove === 'first') {
+      arrayMove(newOrder, a, b);
+    } else {
+      arrayMove(newOrder, b, a);
+    }
+  }
+  return newOrder;
+};
+
 export async function createGenerativeArt(
   configLocation: string,
   randomizedSets,
@@ -74,8 +99,11 @@ export async function createGenerativeArt(
           })
           .reduce((a, b) => a && b);
         if (allTraitsInConditionSatisfied) {
-          theOrder = orderException.order;
-          break;
+          theOrder = partialSort(
+            theOrder,
+            orderException.order,
+            orderException.elementToMove,
+          );
         }
       }
     }
