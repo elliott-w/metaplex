@@ -58,6 +58,8 @@ export async function createMetadataFiles(
   const premadeCustomsIndices = [...Array(premadeCustoms.length).keys()];
 
   // If premadeCustoms have not been generated
+  const currentBreakdown = {};
+
   if (!arraySubset(presentIndices, premadeCustomsIndices)) {
     for (const i of premadeCustomsIndices) {
       randomizedSets.push({
@@ -92,8 +94,6 @@ export async function createMetadataFiles(
   //   randomizedSets.push(premadeCustoms[numberOfFilesCreated]);
   //   numberOfFilesCreated += 1;
   // }
-
-  const currentBreakdown = {};
 
   for (const jsonFile of jsonFiles) {
     const { attributes } = await readJsonFile(
