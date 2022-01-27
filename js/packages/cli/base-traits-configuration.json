@@ -132,7 +132,7 @@
         },
         {
             "order": [
-                "Symbol",
+                "Seal",
                 "Accessory"
             ],
             "elementToMove": "second",
@@ -331,7 +331,8 @@
         "Mouth": "Vampire.png",
         "Head": "Raiden's Hat.png",
         "Arms": "Heavenly Harp.png",
-        "Symbol": "XVIII.png"
+        "Seal": "XVIII.png",
+        "Phase": "Seed.png"
     }],
     "collection": {
         "name": "GODz Seed Launch",
@@ -563,7 +564,7 @@
             "Wizard Glasses.png": 11,
             "Zuko.png": 4
         },
-        "Symbol": {
+        "Seal": {
             "I.png": 1,
             "II.png": 1,
             "III.png": 1,
@@ -711,7 +712,8 @@
         "Mouth",
         "Head",
         "Arms",
-        "Symbol"
+        "Seal",
+        "Phase"
     ],
     "probabilityOrder": [
         "Domain",
@@ -722,7 +724,8 @@
         "Head",
         "Mouth",
         "Arms",
-        "Symbol"
+        "Seal",
+        "Phase"
     ],
     "width": 2604,
     "height": 3282
