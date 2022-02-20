@@ -68,9 +68,9 @@
         "Horns",
         "Fur",
         "Clothing",
+        "Accessory",
         "Eyes",
-        "Fate",
-        "Accessory"
+        "Fate"
     ],
     "probabilityOrder": [
         "Background",
@@ -79,9 +79,9 @@
         "Horns",
         "Fur",
         "Clothing",
+        "Accessory",
         "Eyes",
-        "Fate",
-        "Accessory"
+        "Fate"
     ],
     "width": 2894,
     "height": 4093
