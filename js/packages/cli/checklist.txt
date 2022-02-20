@@ -1,0 +1,23 @@
+0. If any one helped you / saved your mint from doom / fixed your metadata - feel generous - we are all volunteers.
+1. If anything fails just upload upload upload 
+2. switch to arweave in config.json
+3. Or if anything fails than upload upload 
+4. If errored 429 use private rpc
+5. no you can't mint in order 
+6. signatureUnsubscribe error: Invalid subscription id. is just pretending to be an error
+7. can't mint_one_token with captcha on / without enough funds of SOL or another SPL / without the whitelist token
+8. name max 32 chars / symbol max 10 chars / max 4 creators / creators shares must add up to 100
+9. metaboss.rs
+10. check your paths 10 times before asking or posting your command
+11. rent is 0.016 per NFT / 1.6SOL per 1000 / 16 SOL per 10k
+12. image names in json must be the same as actual images - "0.png", "1.png" etc - not "image.png"
+13. first asset pair is 0.json and 0.png - not 1.json and 1.png
+14. if your upload command failed, but charged you a fee (cm created, but not written to cache) - use withdraw
+15. you won't get the hash list until the mint is finished (you will, but only partial).
+16. Read the fabulous docs. https://docs.metaplex.com/
+17. Make sure to run yarn install in metaplex/js folder - not in the root 
+18. No it's not like Solidity. And each NFT has different address.
+19. Most of the frontend work is done in React -> https://www.codecademy.com/learn/react-101 -> still won't work ? Then you can ask 🙂
+20. There is a search feature in Discord. You can search for error codes etc
+21. Image size must be at least 25kB (and less than 10Mb for arweave method)
+22. #Airdrop Bash Thread  - if you need to distribute WL tokens!
