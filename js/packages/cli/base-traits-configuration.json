@@ -25,6 +25,20 @@
                     ]
                 }
             ]
+        },
+        {
+            "order": [
+                "Background",
+                "Fate"
+            ],
+            "elementToMove": "second",
+            "conditions": [
+                {
+                    "Fate": [
+                        "Meteor.png"
+                    ]
+                }
+            ]
         }
     ],
     "premadeCustoms": [],
