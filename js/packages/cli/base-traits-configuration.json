@@ -41,7 +41,33 @@
             ]
         }
     ],
-    "premadeCustoms": [],
+    "premadeCustoms": [{
+        "traits": {
+            "Background": "Astral Goat.png",
+            "Legs": "Astral Goat.png",
+            "Sacrifical Grounds": "Astral Goat.png",
+            "Horns": "Astral Goat.png",
+            "Fur": "Astral Goat.png",
+            "Clothing": "Astral Goat.png",
+            "Accessory": "Astral Goat.png",
+            "Eyes": "Astral Goat.png",
+            "Fate": "Astral Goat.png"
+        },
+        "count": 25
+    },{
+        "traits": {
+            "Background": "Golden Goat.png",
+            "Legs": "Golden Goat.png",
+            "Sacrifical Grounds": "Golden Goat.png",
+            "Horns": "Golden Goat.png",
+            "Fur": "Golden Goat.png",
+            "Clothing": "Golden Goat.png",
+            "Accessory": "Golden Goat.png",
+            "Eyes": "Golden Goat.png",
+            "Fate": "Golden Goat.png"
+        },
+        "count": 100
+    }],
     "collection": {
         "name": "GOATz",
         "family": "GODz"
@@ -49,7 +75,7 @@
     "exactTraitBreakdowns": [],
     "breakdown": {
         "Accessory": {
-            "None.png": 0.5
+            "None.png": 0.50
         },
         "Clothing": {
             "None.png": 0.50
@@ -58,6 +84,9 @@
             "None.png": 0.50
         },
         "Horns": {
+            "None.png": 0.50
+        },
+        "Eyes": {
             "None.png": 0.50
         }
     },
