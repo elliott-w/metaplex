@@ -44,29 +44,29 @@
     "premadeCustoms": [
         {
             "traits": {
-                "Background": "Astral Goat.png",
-                "Legs": "Astral Goat.png",
-                "Sacrifical Grounds": "Astral Goat.png",
-                "Horns": "Astral Goat.png",
-                "Fur": "Astral Goat.png",
-                "Clothing": "Astral Goat.png",
-                "Accessory": "Astral Goat.png",
-                "Eyes": "Astral Goat.png",
-                "Fate": "Astral Goat.png"
+                "Background": "Astral.png",
+                "Legs": "Astral.png",
+                "Sacrifical Grounds": "Astral.png",
+                "Horns": "Astral.png",
+                "Fur": "Astral.png",
+                "Clothing": "Astral.png",
+                "Accessory": "Astral.png",
+                "Eyes": "Astral.png",
+                "Fate": "Astral.png"
             },
             "count": 25
         },
         {
             "traits": {
-                "Background": "Golden Goat.png",
-                "Legs": "Golden Goat.png",
-                "Sacrifical Grounds": "Golden Goat.png",
-                "Horns": "Golden Goat.png",
-                "Fur": "Golden Goat.png",
-                "Clothing": "Golden Goat.png",
-                "Accessory": "Golden Goat.png",
-                "Eyes": "Golden Goat.png",
-                "Fate": "Golden Goat.png"
+                "Background": "Golden.png",
+                "Legs": "Golden.png",
+                "Sacrifical Grounds": "Golden.png",
+                "Horns": "Golden.png",
+                "Fur": "Golden.png",
+                "Clothing": "Golden.png",
+                "Accessory": "Golden.png",
+                "Eyes": "Golden.png",
+                "Fate": "Golden.png"
             },
             "count": 100
         }
