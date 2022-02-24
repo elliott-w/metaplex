@@ -8,7 +8,7 @@
             "share": 100
         }
     ],
-    "seller_fee_basis_points": 600,
+    "seller_fee_basis_points": 1000,
     "dnp": {},
     "exclusive": {},
     "orderExceptions": [
