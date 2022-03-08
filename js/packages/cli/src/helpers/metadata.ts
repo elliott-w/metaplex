@@ -1,7 +1,7 @@
 import fs from 'fs';
-import path from 'path';
-import log from 'loglevel';
 import _ from 'lodash';
+import log from 'loglevel';
+import path from 'path';
 import {
   generateRandomSet,
   getMetadata,
@@ -46,6 +46,18 @@ export async function createMetadataFiles(
     order,
     probabilityOrder,
   } = await readJsonFile(configLocation);
+
+  exactTraitBreakdowns.forEach(trait => {
+    const sum = Object.keys(breakdown[trait]).reduce(
+      (prev, currentAttr) => prev + breakdown[trait][currentAttr],
+      0,
+    );
+    if (numberOfImages > sum) {
+      throw new Error(
+        `You can only generate at most ${sum} images because ${trait} is listed in exactTraitBreakdowns and the breakdown for ${trait} sums up to ${sum}`,
+      );
+    }
+  });
 
   const assetFiles = await readdir(ASSETS_DIRECTORY);
   const jsonFiles = assetFiles.filter(file => {
