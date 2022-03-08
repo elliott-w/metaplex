@@ -55,27 +55,33 @@ export async function createMetadataFiles(
     return parseInt(path.basename(file), 10);
   });
   console.log(`Discovered ${presentIndices.length} existing NFTs.`);
-  const premadeCustomsIndices = [...Array(premadeCustoms.length).keys()];
-
-  // If premadeCustoms have not been generated
   const currentBreakdown = {};
 
-  if (!arraySubset(presentIndices, premadeCustomsIndices)) {
-    for (const i of premadeCustomsIndices) {
-      randomizedSets.push({
-        id: i + 1,
-        set: premadeCustoms[i],
-      });
-      Object.entries(premadeCustoms[i]).forEach(([trait, attr]) => {
-        if (!currentBreakdown[trait]) {
-          currentBreakdown[trait] = {};
-        }
-        if (!currentBreakdown[trait][attr]) {
-          currentBreakdown[trait][attr] = 0;
-        }
-        currentBreakdown[trait][attr] += 1;
-      });
-      presentIndices.push(i);
+  let baseIndex = 0;
+  for (let i = 0; i < premadeCustoms.length; i++) {
+    const premadeCustomIndices = [...Array(premadeCustoms[i].count).keys()].map(
+      j => j + baseIndex,
+    );
+    baseIndex += premadeCustoms[i].count;
+
+    // If premadeCustoms have not been generated
+    if (!arraySubset(presentIndices, premadeCustomIndices)) {
+      for (const j of premadeCustomIndices) {
+        randomizedSets.push({
+          id: j + 1,
+          set: premadeCustoms[i].traits,
+        });
+        Object.entries(premadeCustoms[i].traits).forEach(([trait, attr]) => {
+          if (!currentBreakdown[trait]) {
+            currentBreakdown[trait] = {};
+          }
+          if (!currentBreakdown[trait][attr]) {
+            currentBreakdown[trait][attr] = 0;
+          }
+          currentBreakdown[trait][attr] += 1;
+        });
+        presentIndices.push(j);
+      }
     }
   }
 

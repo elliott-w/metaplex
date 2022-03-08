@@ -1,8 +1,8 @@
 import os
 
-base = './assets-final'
+base = './assets'
 
-for i in range(888):
+for i in range(5000):
   json = base + '/' + str(i) + '.json'
   png = base + '/' + str(i) + '.png'
   if not os.path.exists(json):

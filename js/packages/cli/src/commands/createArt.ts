@@ -1,12 +1,11 @@
-import os from 'os';
-import { writeFile } from 'fs/promises';
 import { createCanvas, loadImage } from 'canvas';
+import { writeFile } from 'fs/promises';
 import imagemin from 'imagemin';
 import imageminPngquant from 'imagemin-pngquant';
 import log from 'loglevel';
-
-import { readJsonFile } from '../helpers/various';
+import os from 'os';
 import { ASSETS_DIRECTORY, TRAITS_DIRECTORY } from '../helpers/metadata';
+import { readJsonFile } from '../helpers/various';
 
 function makeCreateImageWithCanvas(width, height) {
   return function makeCreateImage(canvas, context) {
@@ -67,6 +66,12 @@ const partialSort = (array, partialOrder, elementToMove) => {
       arrayMove(newOrder, a, b);
     } else {
       arrayMove(newOrder, b, a);
+    }
+  } else {
+    if (elementToMove === 'first') {
+      arrayMove(newOrder, a, b - 1);
+    } else {
+      arrayMove(newOrder, b, a + 1);
     }
   }
   return newOrder;

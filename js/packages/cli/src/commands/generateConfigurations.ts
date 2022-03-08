@@ -32,6 +32,10 @@ export async function generateConfigurations(
         attributes.forEach(attr => {
           if (!(attr in configs['breakdown'][trait])) {
             configs['breakdown'][trait][attr] = 1;
+          } else if (configs['breakdown'][trait][attr] < 1) {
+            const x = attributes.length;
+            const y = configs['breakdown'][trait][attr];
+            configs['breakdown'][trait][attr] = (y * (x - 1)) / (1 - y);
           }
         });
       }),

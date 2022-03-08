@@ -12,7 +12,7 @@
     "prune": "find ./assets -name \"*.json\" -type f -delete",
     "metaplex": "node ./build/candy-machine-cli.js",
     "build": "tsc -p ./src",
-    "upload": "node ./build/candy-machine-v2-cli.js upload -e mainnet-beta -k ./.cache/creator-keypair.json -cp example-candy-machine-upload-config.json ./assets-final",
+    "upload": "node ./build/candy-machine-v2-cli.js upload -e mainnet-beta -k ./.cache/creator-keypair.json -cp example-candy-machine-upload-config.json -r https://ssc-dao.genesysgo.net ./assets",
     "update": "node ./build/candy-machine-v2-cli.js update_candy_machine -e mainnet-beta -k ./.cache/creator-keypair.json -cp example-candy-machine-upload-config.json -r https://ssc-dao.genesysgo.net",
     "watch": "tsc -w -p ./src",
     "package:linux": "pkg . --no-bytecode --targets node14-linux-x64 --output bin/linux/metaplex",
