@@ -322,56 +322,7 @@
             ]
         }
     ],
-    "premadeCustoms": [
-        {
-            "Domain": "Shade.png",
-            "Background": "Eye of Zaroth.png",
-            "Accessory": "None.png",
-            "Body": "Red Blade Armour.png",
-            "Eyes": "None.png",
-            "Mouth": "None.png",
-            "Head": "Red Alien.png",
-            "Arms": "Redblade Gauntlets.png",
-            "Seal": "I.png",
-            "Phase": "Seed.png"
-        },
-        {
-            "Domain": "Vigor.png",
-            "Background": "Alien Nest.png",
-            "Accessory": "Tentacle Eyes.png",
-            "Body": "Mutated Body.png",
-            "Eyes": "Witcher.png",
-            "Mouth": "None.png",
-            "Head": "Mutated Head.png",
-            "Arms": "Mutated Arm.png",
-            "Seal": "II.png",
-            "Phase": "Seed.png"
-        },
-        {
-            "Domain": "Pyro.png",
-            "Background": "Floating Rocks.png",
-            "Accessory": "Energy.png",
-            "Body": "Super Saiyan.png",
-            "Eyes": "None.png",
-            "Mouth": "None.png",
-            "Head": "Super Saiyan Hair.png",
-            "Arms": "None.png",
-            "Seal": "III.png",
-            "Phase": "Seed.png"
-        },
-        {
-            "Domain": "Aether.png",
-            "Background": "Rock Formation.png",
-            "Accessory": "Monk Scroll.png",
-            "Body": "Master Bender.png",
-            "Eyes": "None.png",
-            "Mouth": "Dragon Pipe.png",
-            "Head": "None.png",
-            "Arms": "None.png",
-            "Seal": "IV.png",
-            "Phase": "Seed.png"
-        }
-    ],
+    "premadeCustoms": [],
     "collection": {
         "name": "GODz",
         "family": "GODz"
