@@ -1,14 +1,14 @@
-import { LAMPORTS_PER_SOL, AccountInfo } from '@solana/web3.js';
-import fs from 'fs';
-import weighted from 'weighted';
-import path from 'path';
+import { UseMethod, Uses } from '@metaplex-foundation/mpl-token-metadata';
 import { BN, Program, web3 } from '@project-serum/anchor';
 import { Token, TOKEN_PROGRAM_ID } from '@solana/spl-token';
-import { StorageType } from './storage-type';
+import { AccountInfo, LAMPORTS_PER_SOL } from '@solana/web3.js';
+import fs from 'fs';
+import _ from 'lodash';
+import path from 'path';
+import weighted from 'weighted';
 import { getAtaForMint } from './accounts';
 import { CLUSTERS, DEFAULT_CLUSTER } from './constants';
-import _ from 'lodash';
-import { Uses, UseMethod } from '@metaplex-foundation/mpl-token-metadata';
+import { StorageType } from './storage-type';
 
 const { readFile } = fs.promises;
 
@@ -288,7 +288,8 @@ export const generateRandomSet = (
       }
 
       if (forbiddenAttributes.length >= Object.keys(breakdown[trait]).length) {
-        throw new Error(`All attributes for ${trait} are forbidden`);
+        valid = false;
+        return;
       }
 
       forbiddenAttributes.forEach(forbiddenAttribute => {
