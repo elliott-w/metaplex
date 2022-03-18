@@ -79,9 +79,18 @@ export async function createMetadataFiles(
     // If premadeCustoms have not been generated
     if (!arraySubset(presentIndices, premadeCustomIndices)) {
       for (const j of premadeCustomIndices) {
+        const randomizedSet = generateRandomSet(
+          breakdown,
+          currentBreakdown,
+          exactTraitBreakdowns,
+          probabilityOrder,
+          dnp,
+          exclusive,
+          premadeCustoms[i].traits,
+        );
         randomizedSets.push({
           id: j + 1,
-          set: premadeCustoms[i].traits,
+          set: randomizedSet,
         });
         Object.entries(premadeCustoms[i].traits).forEach(([trait, attr]) => {
           if (!currentBreakdown[trait]) {

@@ -249,6 +249,7 @@ export const generateRandomSet = (
   probabilityOrder,
   dnp,
   exclusive,
+  premadeBreakdown = {},
 ) => {
   let valid = true;
   let tmp = {};
@@ -256,6 +257,10 @@ export const generateRandomSet = (
     valid = true;
     const keys = probabilityOrder;
     for (const trait of keys) {
+      if (trait in premadeBreakdown) {
+        tmp[trait] = premadeBreakdown[trait];
+        continue;
+      }
       const breakdownToUse = _.clone(breakdown[trait]);
 
       const forbiddenAttributes = [];
