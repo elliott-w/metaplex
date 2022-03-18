@@ -192,20 +192,6 @@
         {
             "order": [
                 "Head",
-                "Mouth"
-            ],
-            "elementToMove": "second",
-            "conditions": [
-                {
-                    "Mouth": [
-                        "Dragon Pipe.png"
-                    ]
-                }
-            ]
-        },
-        {
-            "order": [
-                "Head",
                 "Eyes"
             ],
             "elementToMove": "second",
@@ -309,6 +295,11 @@
                         "Puppet Master.png",
                         "Meeko Helm.png",
                         "Pantheon Helm.png"
+                    ]
+                },
+                {
+                    "Mouth": [
+                        "Dragon Pipe.png"
                     ]
                 }
             ]
