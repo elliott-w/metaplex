@@ -710,7 +710,52 @@
             ]
         }
     ],
-    "premadeCustoms": [],
+    "premadeCustoms": [
+        {
+            "traits": {
+                "Background": "Eye of Zaroth.png",
+                "Body": "Red Blade Armour.png",
+                "Head": "Red Alien.png",
+                "Arms": "Redblade Gauntlets.png"
+            },
+            "count": 1
+        },
+        {
+            "traits": {
+                "Body": "Mutated Body.png",
+                "Head": "Mutated Head.png",
+                "Arms": "Mutated Arm.png"
+            },
+            "count": 1
+        },
+        {
+            "traits": {
+                "Background": "Floating Rocks.png",
+                "Accessory": "Energy.png",
+                "Domain": "Pyro.png",
+                "Body": "Super Saiyan.png",
+                "Head": "Super Saiyan Hair.png"
+            },
+            "count": 1
+        },
+        {
+            "traits": {
+                "Domain": "Hydro.png",
+                "Body": "Frozen Body.png",
+                "Head": "Frozen Head.png",
+                "Arms": "Frozen Handz.png"
+            },
+            "count": 1
+        },
+        {
+            "traits": {
+                "Domain": "Anima.png",
+                "Body": "Wooden Armour.png",
+                "Arms": "Wooden Gauntlets.png"
+            },
+            "count": 1
+        }
+    ],
     "collection": {
         "name": "GODz",
         "family": "GODz"
