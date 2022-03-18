@@ -252,17 +252,22 @@ export const generateRandomSet = (
   premadeBreakdown = {},
 ) => {
   let valid = true;
-  let tmp = {};
+  let tmp;
   do {
+    tmp = {};
     valid = true;
     const keys = probabilityOrder;
     for (const trait of keys) {
+      if (!currentBreakdown[trait]) {
+        currentBreakdown[trait] = {};
+      }
+
       if (trait in premadeBreakdown) {
         tmp[trait] = premadeBreakdown[trait];
         continue;
       }
-      const breakdownToUse = _.clone(breakdown[trait]);
 
+      const breakdownToUse = _.clone(breakdown[trait]);
       const forbiddenAttributes = [];
 
       Object.keys(exclusive).forEach(_trait => {
@@ -282,9 +287,6 @@ export const generateRandomSet = (
         }
       });
 
-      if (!currentBreakdown[trait]) {
-        currentBreakdown[trait] = {};
-      }
       if (exactTraitBreakdowns.includes(trait)) {
         Object.keys(breakdown[trait]).forEach(attr => {
           if (attr in currentBreakdown[trait]) {
@@ -371,7 +373,6 @@ export const generateRandomSet = (
         ) {
           log.debug('Not including', tmp[trait1], tmp[trait2], 'together');
           valid = false;
-          tmp = {};
         }
       });
     });
