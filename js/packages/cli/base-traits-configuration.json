@@ -389,6 +389,20 @@
                     ]
                 }
             ]
+        },
+        {
+            "order": [
+                "Eyes",
+                "Mouth"
+            ],
+            "elementToMove": "first",
+            "conditions": [
+                {
+                    "Eyes": [
+                        "Face Paint.png"
+                    ]
+                }
+            ]
         }
     ],
     "premadeCustoms": [],
