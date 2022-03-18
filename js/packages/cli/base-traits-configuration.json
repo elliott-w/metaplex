@@ -384,7 +384,8 @@
             "conditions": [
                 {
                     "Eyes": [
-                        "Tribal.png"
+                        "Tribal.png",
+                        "Dragon.png"
                     ]
                 }
             ]
