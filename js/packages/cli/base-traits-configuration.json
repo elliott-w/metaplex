@@ -66,8 +66,8 @@
         "Arms": {
             "Redblade Gauntlets.png": {
                 "Body": [
-                    "Time For Business.png", 
-                    "Tanjiro's Robe.png", 
+                    "Time For Business.png",
+                    "Tanjiro's Robe.png",
                     "Samurai Kimono.png",
                     "Sage Coat.png",
                     "Karsa Worshippers Robe.png",
@@ -78,8 +78,8 @@
             },
             "Mutated Arm.png": {
                 "Body": [
-                    "Time For Business.png", 
-                    "Tanjiro's Robe.png", 
+                    "Time For Business.png",
+                    "Tanjiro's Robe.png",
                     "Samurai Kimono.png",
                     "Sage Coat.png",
                     "Karsa Worshippers Robe.png",
@@ -90,8 +90,8 @@
             },
             "Bionic.png": {
                 "Body": [
-                    "Time For Business.png", 
-                    "Tanjiro's Robe.png", 
+                    "Time For Business.png",
+                    "Tanjiro's Robe.png",
                     "Samurai Kimono.png",
                     "Sage Coat.png",
                     "Karsa Worshippers Robe.png",
@@ -197,7 +197,7 @@
                     "Stone Mask.png",
                     "Thorned Mask.png"
                 ]
-            }, 
+            },
             "Visor.png": {
                 "Head": [
                     "Ancient Navigator.png",
@@ -316,7 +316,7 @@
                     "Space Helmet.png",
                     "Stone Mask.png",
                     "Thorned Mask.png"
-                ] 
+                ]
             }
         }
     },
@@ -441,6 +441,11 @@
                 {
                     "Head": [
                         "Goat Horns.png"
+                    ]
+                },
+                {
+                    "Head": [
+                        "Soul Forged Imperial Crown.png"
                     ]
                 }
             ]
@@ -604,6 +609,88 @@
                     "Eyes": [
                         "Tribal.png",
                         "Dragon.png"
+                    ]
+                },
+                {
+                    "Eyes": [
+                        "Shankz Scar.png",
+                        "Evil Eye.png"
+                    ],
+                    "Head": [
+                        "Alien.png",
+                        "Ancient Aztec Headdress.png",
+                        "Ancient Crown.png",
+                        "Ancient Navigator.png",
+                        "Antlers.png",
+                        "Anubis Mask.png",
+                        "Bear Hood.png",
+                        "Candles.png",
+                        "Captain Sparrow.png",
+                        "Ceremonial Demon Mask.png",
+                        "Cthulhu.png",
+                        "Cyborg.png",
+                        "Dark Knight Helm.png",
+                        "Dark Lord.png",
+                        "Dreadlockz.png",
+                        "Droid.png",
+                        "Exodia.png",
+                        "Fish Bowl.png",
+                        "Flame On.png",
+                        "Frozen Head.png",
+                        "Geralts Hair.png",
+                        "Gladiator.png",
+                        "Goat Horns.png",
+                        "Gold Mask.png",
+                        "Gold Wreath.png",
+                        "Golden Eagle Warrior.png",
+                        "Hanafuda Earrings.png",
+                        "Handz Of The Fallen.png",
+                        "Hermes.png",
+                        "Hokage.png",
+                        "Hollow Mask.png",
+                        "Horns.png",
+                        "Jester Hat.png",
+                        "Joker.png",
+                        "Julius.png",
+                        "Knights Helm.png",
+                        "Legolas Hair.png",
+                        "Madara Hair.png",
+                        "Man Bun.png",
+                        "Mando Helmet.png",
+                        "Many Faces.png",
+                        "Medusa Hair.png",
+                        "Meeko Helm.png",
+                        "Monkey Fren.png",
+                        "Mummified.png",
+                        "Mutated Head.png",
+                        "Neon Mask.png",
+                        "Oni Mask.png",
+                        "Pantheon Helm.png",
+                        "Perfect Purple Hair.png",
+                        "Primordial Worshipper.png",
+                        "Puppet Master.png",
+                        "Raiden's Hat.png",
+                        "Rain Hat.png",
+                        "Reaper Hood.png",
+                        "Red Alien.png",
+                        "Rice Hat.png",
+                        "Royal Fishman Guard.png",
+                        "Samurai Bun.png",
+                        "Samurai Hair.png",
+                        "Saturn.png",
+                        "Sherlock.png",
+                        "Shinobi.png",
+                        "Skull Necklace.png",
+                        "Sombrero.png",
+                        "Space Helmet.png",
+                        "Stone Mask.png",
+                        "Super Saiyan Hair.png",
+                        "The Hunt.png",
+                        "Thorned Mask.png",
+                        "Witches Hat.png",
+                        "Wolf.png",
+                        "Zangetsu Mask.png",
+                        "None.png"
                     ]
                 }
             ]
