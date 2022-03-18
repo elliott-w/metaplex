@@ -31,6 +31,37 @@
                     "Face Paint.png"
                 ]
             }
+        },
+        "Head": {
+            "Thorned Mask.png": {
+                "Eyes": [
+                    "Alien.png",
+                    "Assassin.png",
+                    "Binoculars.png",
+                    "Blindfold.png",
+                    "Cyclops.png",
+                    "DYOR.png",
+                    "Donatello's Headband.png",
+                    "Dragon.png",
+                    "Eye Patch.png",
+                    "Eyes of Shelob.png",
+                    "Face Paint.png",
+                    "Fujin Browz.png",
+                    "Master Roshi's Glasses.png",
+                    "Nerd Glasses.png",
+                    "None.png",
+                    "Over 9000.png",
+                    "Ruined Mascara.png",
+                    "Shadez.png",
+                    "Skull.png",
+                    "Tear Drop.png",
+                    "Thug Shadez.png",
+                    "Tribal.png",
+                    "Visor.png",
+                    "Wizard Glasses.png",
+                    "Zuko.png"
+                ]
+            }
         }
     },
     "exclusive": {
