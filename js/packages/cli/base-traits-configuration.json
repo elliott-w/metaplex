@@ -351,6 +351,20 @@
                     ]
                 }
             ]
+        },
+        {
+            "order": [
+                "Eyes",
+                "Head"
+            ],
+            "elementToMove": "first",
+            "conditions": [
+                {
+                    "Eyes": [
+                        "Tribal.png"
+                    ]
+                }
+            ]
         }
     ],
     "premadeCustoms": [],
