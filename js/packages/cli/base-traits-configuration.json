@@ -440,11 +440,7 @@
             "conditions": [
                 {
                     "Head": [
-                        "Goat Horns.png"
-                    ]
-                },
-                {
-                    "Head": [
+                        "Goat Horns.png",
                         "Soul Forged Imperial Crown.png"
                     ]
                 }
@@ -513,7 +509,7 @@
                 "Head",
                 "Body"
             ],
-            "elementToMove": "first",
+            "elementToMove": "second",
             "conditions": [
                 {
                     "Head": [
