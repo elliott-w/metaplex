@@ -61,11 +61,41 @@ export async function createMetadataFiles(
   const jsonFiles = assetFiles.filter(file => {
     return path.extname(file).toLowerCase() === '.json';
   });
+  const imageFiles = assetFiles.filter(file => {
+    return path.extname(file).toLowerCase() === '.png';
+  });
   const presentIndices = jsonFiles.map(file => {
     return parseInt(path.basename(file), 10);
   });
-  console.log(`Discovered ${presentIndices.length} existing NFTs.`);
+  const presentImageIndices = imageFiles.map(file => {
+    return parseInt(path.basename(file), 10);
+  });
+  const missingImageIndices = presentIndices.filter(
+    jsonIndex => !presentImageIndices.includes(jsonIndex),
+  );
+
+  console.log(`Discovered ${presentIndices.length} existing json files.`);
+  console.log(`Discovered ${presentImageIndices.length} existing image files.`);
   const currentBreakdown = {};
+
+  if (missingImageIndices.length > 0) {
+    console.log(
+      `Found ${missingImageIndices.length} json files with missing images`,
+    );
+  }
+  for (const i of missingImageIndices) {
+    const { attributes } = await readJsonFile(
+      path.join(ASSETS_DIRECTORY, `${i}.json`),
+    );
+    const set = {};
+    for (const traitAttrPair of attributes) {
+      set[traitAttrPair.trait_type] = traitAttrPair.value + '.png';
+    }
+    randomizedSets.push({
+      id: i + 1,
+      set: set,
+    });
+  }
 
   let baseIndex = 0;
   for (let i = 0; i < premadeCustoms.length; i++) {
@@ -111,8 +141,6 @@ export async function createMetadataFiles(
     console.log(
       `Generating ${missingIndices.length} NFTs to fill the empty slots.`,
     );
-  } else {
-    console.log(`Skipping NFT image generation, no missing slots found.`);
   }
 
   // while (numberOfFilesCreated < premadeCustoms.length) {
