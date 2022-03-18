@@ -109,6 +109,7 @@ export async function createGenerativeArt(
             orderException.order,
             orderException.elementToMove,
           );
+          break;
         }
       }
     }
