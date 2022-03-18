@@ -286,6 +286,15 @@
                         "Puppet Master.png",
                         "Reaper Hood.png"
                     ]
+                },
+                {
+                    "Head": [
+                        "Wolf.png"
+                    ],
+                    "Body": [
+                        "Izanagi Robe.png",
+                        "Ancient Gladiator.png"
+                    ]
                 }
             ]
         },
