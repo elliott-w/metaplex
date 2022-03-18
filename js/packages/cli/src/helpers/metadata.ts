@@ -14,8 +14,6 @@ const { writeFile, mkdir, readdir } = fs.promises;
 export const ASSETS_DIRECTORY = './assets';
 export const TRAITS_DIRECTORY = './traits';
 
-const arraySubset = (arr, target) => target.every(v => arr.includes(v));
-
 export async function createMetadataFiles(
   numberOfImages: number,
   configLocation: string,
@@ -77,8 +75,8 @@ export async function createMetadataFiles(
     baseIndex += premadeCustoms[i].count;
 
     // If premadeCustoms have not been generated
-    if (!arraySubset(presentIndices, premadeCustomIndices)) {
-      for (const j of premadeCustomIndices) {
+    for (const j of premadeCustomIndices) {
+      if (!presentIndices.includes(j)) {
         const randomizedSet = generateRandomSet(
           breakdown,
           currentBreakdown,
