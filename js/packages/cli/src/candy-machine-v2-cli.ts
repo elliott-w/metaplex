@@ -1,9 +1,40 @@
 #!/usr/bin/env ts-node
-import * as fs from 'fs';
-import * as path from 'path';
-import { program } from 'commander';
 import * as anchor from '@project-serum/anchor';
-
+import { LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
+import { program } from 'commander';
+import * as fs from 'fs';
+import log from 'loglevel';
+import { getType } from 'mime';
+import * as path from 'path';
+import { createGenerativeArt } from './commands/createArt';
+import { generateConfigurations } from './commands/generateConfigurations';
+import { mintV2 } from './commands/mint';
+import { signMetadata } from './commands/sign';
+import {
+  getAccountsByCreatorAddress,
+  signAllMetadataFromCandyMachine,
+} from './commands/signAll';
+import { updateFromCache } from './commands/updateFromCache';
+import { uploadV2 } from './commands/upload';
+import { verifyTokenMetadata } from './commands/verifyTokenMetadata';
+import { withdrawV2 } from './commands/withdraw';
+import {
+  AccountAndPubkey,
+  deriveCandyMachineV2ProgramAddress,
+  getProgramAccounts,
+  loadCandyProgramV2,
+  loadWalletKey,
+} from './helpers/accounts';
+import { loadCache, saveCache } from './helpers/cache';
+import {
+  CACHE_PATH,
+  CANDY_MACHINE_PROGRAM_V2_ID,
+  CONFIG_ARRAY_START_V2,
+  CONFIG_LINE_SIZE_V2,
+  EXTENSION_JSON,
+} from './helpers/constants';
+import { createMetadataFiles } from './helpers/metadata';
+import { StorageType } from './helpers/storage-type';
 import {
   chunks,
   fromUTF8Array,
@@ -11,39 +42,7 @@ import {
   parsePrice,
   shuffle,
 } from './helpers/various';
-import { PublicKey, LAMPORTS_PER_SOL } from '@solana/web3.js';
-import {
-  CACHE_PATH,
-  CONFIG_LINE_SIZE_V2,
-  EXTENSION_JSON,
-  CANDY_MACHINE_PROGRAM_V2_ID,
-  CONFIG_ARRAY_START_V2,
-} from './helpers/constants';
-import {
-  getProgramAccounts,
-  loadCandyProgramV2,
-  loadWalletKey,
-  AccountAndPubkey,
-  deriveCandyMachineV2ProgramAddress,
-} from './helpers/accounts';
 
-import { uploadV2 } from './commands/upload';
-import { verifyTokenMetadata } from './commands/verifyTokenMetadata';
-import { generateConfigurations } from './commands/generateConfigurations';
-import { loadCache, saveCache } from './helpers/cache';
-import { mintV2 } from './commands/mint';
-import { signMetadata } from './commands/sign';
-import {
-  getAccountsByCreatorAddress,
-  signAllMetadataFromCandyMachine,
-} from './commands/signAll';
-import log from 'loglevel';
-import { createMetadataFiles } from './helpers/metadata';
-import { createGenerativeArt } from './commands/createArt';
-import { withdrawV2 } from './commands/withdraw';
-import { updateFromCache } from './commands/updateFromCache';
-import { StorageType } from './helpers/storage-type';
-import { getType } from 'mime';
 program.version('0.0.2');
 const supportedImageTypes = {
   'image/png': 1,
@@ -956,9 +955,10 @@ program
 
     log.info('Loaded configuration file');
 
+    const numOfImages = parseInt(numberOfImages, 10);
     // 1. generate the metadata json files
     const randomSets = await createMetadataFiles(
-      parseInt(numberOfImages, 10),
+      numOfImages,
       configLocation,
       treatAttributesAsFileNames == 'true',
     );
@@ -967,7 +967,8 @@ program
 
     // 2. piecemeal generate the images
     if (!outputLocation) {
-      await createGenerativeArt(configLocation, randomSets);
+      const useStaging = randomSets.length < numOfImages;
+      await createGenerativeArt(configLocation, randomSets, useStaging);
       log.info('Images have been created successfully!');
     } else {
       fs.writeFileSync(outputLocation, JSON.stringify(randomSets));

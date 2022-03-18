@@ -9,9 +9,10 @@ import {
   shuffle,
 } from './various';
 
-const { writeFile, mkdir, readdir } = fs.promises;
+const { writeFile, mkdir, readdir, rename } = fs.promises;
 
 export const ASSETS_DIRECTORY = './assets';
+export const ASSETS_STAGING_DIRECTORY = './assets-staging';
 export const TRAITS_DIRECTORY = './traits';
 
 export async function createMetadataFiles(
@@ -26,6 +27,14 @@ export async function createMetadataFiles(
       await mkdir(ASSETS_DIRECTORY);
     } catch (err) {
       log.error('unable to create assets directory', err);
+    }
+  }
+
+  if (!fs.existsSync(ASSETS_STAGING_DIRECTORY)) {
+    try {
+      await mkdir(ASSETS_STAGING_DIRECTORY);
+    } catch (err) {
+      log.error('unable to create assets staging directory', err);
     }
   }
 
@@ -57,10 +66,25 @@ export async function createMetadataFiles(
     }
   });
 
-  const assetFiles = await readdir(ASSETS_DIRECTORY);
+  let assetFiles = await readdir(ASSETS_DIRECTORY);
+  const useStaging = assetFiles.length > 0;
+
+  if (useStaging) {
+    const stagingAssetFiles = await readdir(ASSETS_STAGING_DIRECTORY);
+    await Promise.all(
+      stagingAssetFiles.map(async file => {
+        const oldPath = path.join(ASSETS_STAGING_DIRECTORY, file);
+        const newPath = path.join(ASSETS_DIRECTORY, file);
+        return rename(oldPath, newPath);
+      }),
+    );
+  }
+
+  assetFiles = await readdir(ASSETS_DIRECTORY);
   const jsonFiles = assetFiles.filter(file => {
     return path.extname(file).toLowerCase() === '.json';
   });
+
   const imageFiles = assetFiles.filter(file => {
     return path.extname(file).toLowerCase() === '.png';
   });
@@ -206,10 +230,17 @@ export async function createMetadataFiles(
     );
 
     try {
-      await writeFile(
-        `${ASSETS_DIRECTORY}/${i}.json`,
-        JSON.stringify(metadata),
-      );
+      if (useStaging) {
+        await writeFile(
+          `${ASSETS_STAGING_DIRECTORY}/${i}.json`,
+          JSON.stringify(metadata),
+        );
+      } else {
+        await writeFile(
+          `${ASSETS_DIRECTORY}/${i}.json`,
+          JSON.stringify(metadata),
+        );
+      }
     } catch (err) {
       log.error(`${randomizedSet.id} failed to get created`, err);
     }

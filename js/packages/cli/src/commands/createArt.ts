@@ -4,10 +4,14 @@ import imagemin from 'imagemin';
 import imageminPngquant from 'imagemin-pngquant';
 import log from 'loglevel';
 import os from 'os';
-import { ASSETS_DIRECTORY, TRAITS_DIRECTORY } from '../helpers/metadata';
+import {
+  ASSETS_DIRECTORY,
+  ASSETS_STAGING_DIRECTORY,
+  TRAITS_DIRECTORY,
+} from '../helpers/metadata';
 import { readJsonFile } from '../helpers/various';
 
-function makeCreateImageWithCanvas(width, height) {
+function makeCreateImageWithCanvas(width, height, useStaging: boolean) {
   return function makeCreateImage(canvas, context) {
     return async function createImage({ image, order }) {
       const start = Date.now();
@@ -28,7 +32,14 @@ function makeCreateImageWithCanvas(width, height) {
           }),
         ],
       });
-      await writeFile(`${ASSETS_DIRECTORY}/${ID}.png`, optimizedImage);
+      if (useStaging) {
+        await writeFile(
+          `${ASSETS_STAGING_DIRECTORY}/${ID}.png`,
+          optimizedImage,
+        );
+      } else {
+        await writeFile(`${ASSETS_DIRECTORY}/${ID}.png`, optimizedImage);
+      }
       const end = Date.now();
       log.info(`Placed ${ID}.png into ${ASSETS_DIRECTORY}.`);
       const duration = end - start;
@@ -80,13 +91,13 @@ const partialSort = (array, partialOrder, elementToMove) => {
 export async function createGenerativeArt(
   configLocation: string,
   randomizedSets,
+  useStaging: boolean,
 ) {
   const start = Date.now();
   const { order, orderExceptions, width, height } = await readJsonFile(
     configLocation,
   );
-
-  const makeCreateImage = makeCreateImageWithCanvas(width, height);
+  const makeCreateImage = makeCreateImageWithCanvas(width, height, useStaging);
 
   const imagesNb = randomizedSets.length;
 
