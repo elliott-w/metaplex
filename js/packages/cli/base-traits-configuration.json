@@ -223,9 +223,7 @@
                         "Nerd Glasses.png",
                         "Power.png",
                         "Passion.png"
-                    ]
-                },
-                {
+                    ],
                     "Head": [
                         "Perfect Purple Hair.png",
                         "Mutated Head.png",
@@ -240,23 +238,12 @@
                         "Dreadlockz.png",
                         "Super Saiyan Hair.png"
                     ]
-                }
-            ]
-        },
-        {
-            "order": [
-                "Head",
-                "Eyes"
-            ],
-            "elementToMove": "second",
-            "conditions": [
+                },
                 {
                     "Eyes": [
                         "Power.png",
                         "Passion.png"
-                    ]
-                },
-                {
+                    ],
                     "Head": [
                         "Golden Eagle Warrior.png",
                         "Bear Hood.png",
@@ -346,9 +333,7 @@
                         "Nerd Glasses.png",
                         "Power.png",
                         "Passion.png"
-                    ]
-                },
-                {
+                    ],
                     "Mouth": [
                         "Ape.png",
                         "Bane.png",
