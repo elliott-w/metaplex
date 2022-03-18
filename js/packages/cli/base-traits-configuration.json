@@ -62,6 +62,44 @@
                     "Zuko.png"
                 ]
             }
+        },
+        "Arms": {
+            "Redblade Gauntlets.png": {
+                "Body": [
+                    "Time For Business.png", 
+                    "Tanjiro's Robe.png", 
+                    "Samurai Kimono.png",
+                    "Sage Coat.png",
+                    "Karsa Worshippers Robe.png",
+                    "Dark Knight Armour.png",
+                    "Crocodiles Robe.png",
+                    "Admirals Jacket.png"
+                ]
+            },
+            "Mutated Arm.png": {
+                "Body": [
+                    "Time For Business.png", 
+                    "Tanjiro's Robe.png", 
+                    "Samurai Kimono.png",
+                    "Sage Coat.png",
+                    "Karsa Worshippers Robe.png",
+                    "Dark Knight Armour.png",
+                    "Crocodiles Robe.png",
+                    "Admirals Jacket.png"
+                ]
+            },
+            "Bionic.png": {
+                "Body": [
+                    "Time For Business.png", 
+                    "Tanjiro's Robe.png", 
+                    "Samurai Kimono.png",
+                    "Sage Coat.png",
+                    "Karsa Worshippers Robe.png",
+                    "Dark Knight Armour.png",
+                    "Crocodiles Robe.png",
+                    "Admirals Jacket.png"
+                ]
+            }
         }
     },
     "exclusive": {
