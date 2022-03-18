@@ -61,6 +61,11 @@
                     "Wizard Glasses.png",
                     "Zuko.png"
                 ]
+            },
+            "Reaper Hood.png": {
+                "Eyes": [
+                    "Donatello's Headband.png"
+                ]
             }
         },
         "Arms": {
@@ -524,6 +529,11 @@
                     "Body": [
                         "Izanagi Robe.png",
                         "Ancient Gladiator.png"
+                    ]
+                },
+                {
+                    "Body": [
+                        "Super Saiyan.png"
                     ]
                 }
             ]
