@@ -710,25 +710,7 @@
             ]
         }
     ],
-    "premadeCustoms": [
-        {
-            "traits": {
-                "Background": "Eye of Zaroth.png",
-                "Body": "Red Blade Armour.png",
-                "Head": "Red Alien.png",
-                "Arms": "Redblade Gauntlets.png"
-            },
-            "count": 1
-        },
-        {
-            "traits": {
-                "Body": "Red Blade Armour.png",
-                "Head": "Red Alien.png",
-                "Arms": "Redblade Gauntlets.png"
-            },
-            "count": 1
-        }
-    ],
+    "premadeCustoms": [],
     "collection": {
         "name": "GODz",
         "family": "GODz"
