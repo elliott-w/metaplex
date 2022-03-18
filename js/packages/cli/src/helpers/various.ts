@@ -4,6 +4,7 @@ import { Token, TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import { AccountInfo, LAMPORTS_PER_SOL } from '@solana/web3.js';
 import fs from 'fs';
 import _ from 'lodash';
+import log from 'loglevel';
 import path from 'path';
 import weighted from 'weighted';
 import { getAtaForMint } from './accounts';
@@ -251,11 +252,10 @@ export const generateRandomSet = (
 ) => {
   let valid = true;
   let tmp = {};
-
   do {
     valid = true;
     const keys = probabilityOrder;
-    keys.forEach(trait => {
+    for (const trait of keys) {
       const breakdownToUse = _.clone(breakdown[trait]);
 
       const forbiddenAttributes = [];
@@ -266,6 +266,9 @@ export const generateRandomSet = (
             if (tmp[_trait] != attr) {
               if (trait in exclusive[_trait][attr]) {
                 for (const exclusiveAttr of exclusive[_trait][attr][trait]) {
+                  log.debug(
+                    `Marking ${trait} attribute ${exclusiveAttr} as forbidden (due to exclusivity)`,
+                  );
                   forbiddenAttributes.push(exclusiveAttr);
                 }
               }
@@ -281,6 +284,9 @@ export const generateRandomSet = (
         Object.keys(breakdown[trait]).forEach(attr => {
           if (attr in currentBreakdown[trait]) {
             if (currentBreakdown[trait][attr] >= breakdown[trait][attr]) {
+              log.debug(
+                `Marking ${trait} attribute ${attr} as forbidden (due to exact breakdown)`,
+              );
               forbiddenAttributes.push(attr);
             }
           }
@@ -288,8 +294,9 @@ export const generateRandomSet = (
       }
 
       if (forbiddenAttributes.length >= Object.keys(breakdown[trait]).length) {
+        log.debug(`All attributes for ${trait} are forbidden: skipping`);
         valid = false;
-        return;
+        break;
       }
 
       forbiddenAttributes.forEach(forbiddenAttribute => {
@@ -317,7 +324,12 @@ export const generateRandomSet = (
       });
 
       tmp[trait] = randomSelection;
-    });
+      log.debug(`Setting ${trait} to ${randomSelection}`);
+    }
+
+    if (!valid) {
+      continue;
+    }
 
     keys.forEach(trait => {
       let breakdownToUse = breakdown[trait];
@@ -330,7 +342,7 @@ export const generateRandomSet = (
         ) {
           breakdownToUse = breakdown[otherTrait][tmp[otherTrait]][trait];
 
-          console.log(
+          log.debug(
             'Because this item got trait',
             tmp[otherTrait],
             'we are using different probabilites for',
@@ -352,7 +364,7 @@ export const generateRandomSet = (
           dnp[trait1][tmp[trait1]][trait2] &&
           dnp[trait1][tmp[trait1]][trait2].includes(tmp[trait2])
         ) {
-          console.log('Not including', tmp[trait1], tmp[trait2], 'together');
+          log.debug('Not including', tmp[trait1], tmp[trait2], 'together');
           valid = false;
           tmp = {};
         }
