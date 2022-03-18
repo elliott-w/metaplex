@@ -710,7 +710,25 @@
             ]
         }
     ],
-    "premadeCustoms": [],
+    "premadeCustoms": [
+        {
+            "traits": {
+                "Background": "Eye of Zaroth.png",
+                "Body": "Red Blade Armour.png",
+                "Head": "Red Alien.png",
+                "Arms": "Redblade Gauntlets.png"
+            },
+            "count": 1
+        },
+        {
+            "traits": {
+                "Body": "Red Blade Armour.png",
+                "Head": "Red Alien.png",
+                "Arms": "Redblade Gauntlets.png"
+            },
+            "count": 1
+        }
+    ],
     "collection": {
         "name": "GODz",
         "family": "GODz"
@@ -744,6 +762,7 @@
             "Shadow Snakes.png": 22,
             "Smoke Trail.png": 8,
             "Soul Forged Wings.png": 11,
+            "Spirit Wolves.png": 9,
             "Tentacle Eyes.png": 25,
             "Travellers Pack.png": 30,
             "Warriors Spirit.png": 11,
