@@ -14,6 +14,7 @@ import {
   PublicKey,
 } from '@solana/web3.js';
 import fs from 'fs';
+import { readFile } from 'fs/promises';
 import _ from 'lodash';
 import log from 'loglevel';
 import path from 'path';
@@ -21,6 +22,11 @@ import weighted from 'weighted';
 import { getAtaForMint } from './accounts';
 import { CLUSTERS, DEFAULT_CLUSTER } from './constants';
 import { StorageType } from './storage-type';
+
+export async function readJsonFile(fileName: string) {
+  const file = await readFile(fileName, 'utf-8');
+  return JSON.parse(file);
+}
 
 export async function getCandyMachineV2Config(
   walletKeyPair: web3.Keypair,
