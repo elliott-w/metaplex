@@ -1160,10 +1160,16 @@ program
         walletKeyPair.publicKey,
       )
     )[0];
+    //@ts-ignore
+    const fairLaunchLotteryBitmap = (
+      await getFairLaunchLotteryBitmap(fairLaunchObj.tokenMint)
+    )[0];
+
     await adjustTicket({
       amountNumber,
       fairLaunchObj,
       adjuster: walletKeyPair.publicKey,
+      fairLaunch,
       fairLaunchTicket,
       fairLaunchLotteryBitmap,
       anchorProgram,
