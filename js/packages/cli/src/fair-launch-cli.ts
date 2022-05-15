@@ -1,34 +1,34 @@
 #!/usr/bin/env node
-import * as fs from 'fs';
-import { program } from 'commander';
 import * as anchor from '@project-serum/anchor';
+import { MintLayout, Token } from '@solana/spl-token';
 import { LAMPORTS_PER_SOL } from '@solana/web3.js';
-import { Token, MintLayout } from '@solana/spl-token';
+import { program } from 'commander';
+import * as fs from 'fs';
+import {
+  getAtaForMint,
+  getEditionMarkPda,
+  getFairLaunch,
+  getFairLaunchLotteryBitmap,
+  getFairLaunchTicket,
+  getFairLaunchTicketSeqLookup,
+  getMasterEdition,
+  getMetadata,
+  getParticipationMint,
+  getParticipationToken,
+  getTokenMint,
+  getTreasury,
+  loadFairLaunchProgram,
+  loadWalletKey,
+} from './helpers/accounts';
 import {
   CACHE_PATH,
   FAIR_LAUNCH_PROGRAM_ID,
   TOKEN_METADATA_PROGRAM_ID,
   TOKEN_PROGRAM_ID,
 } from './helpers/constants';
-import {
-  loadFairLaunchProgram,
-  loadWalletKey,
-  getTokenMint,
-  getFairLaunch,
-  getTreasury,
-  getFairLaunchTicket,
-  getAtaForMint,
-  getFairLaunchTicketSeqLookup,
-  getFairLaunchLotteryBitmap,
-  getMetadata,
-  getParticipationMint,
-  getParticipationToken,
-  getMasterEdition,
-  getEditionMarkPda,
-} from './helpers/accounts';
-import { chunks, getMultipleAccounts, sleep } from './helpers/various';
 import { createAssociatedTokenAccountInstruction } from './helpers/instructions';
 import { sendTransactionWithRetryWithKeypair } from './helpers/transactions';
+import { chunks, getMultipleAccounts, sleep } from './helpers/various';
 program.version('0.0.1');
 
 if (!fs.existsSync(CACHE_PATH)) {
@@ -1160,15 +1160,10 @@ program
         walletKeyPair.publicKey,
       )
     )[0];
-
-    const fairLaunchLotteryBitmap = //@ts-ignore
-    (await getFairLaunchLotteryBitmap(fairLaunchObj.tokenMint))[0];
-
     await adjustTicket({
       amountNumber,
       fairLaunchObj,
       adjuster: walletKeyPair.publicKey,
-      fairLaunch,
       fairLaunchTicket,
       fairLaunchLotteryBitmap,
       anchorProgram,
@@ -1767,9 +1762,10 @@ program
         walletKeyPair.publicKey,
       )
     )[0];
-
-    const fairLaunchLotteryBitmap = //@ts-ignore
-    (await getFairLaunchLotteryBitmap(fairLaunchObj.tokenMint))[0];
+    //@ts-ignore
+    const fairLaunchLotteryBitmap = (
+      await getFairLaunchLotteryBitmap(fairLaunchObj.tokenMint)
+    )[0];
 
     const ticket = await anchorProgram.account.fairLaunchTicket.fetch(
       fairLaunchTicket,
@@ -1945,8 +1941,10 @@ program
     const fairLaunchObj = await anchorProgram.account.fairLaunch.fetch(
       fairLaunchKey,
     );
-    const fairLaunchLotteryBitmap = //@ts-ignore
-    (await getFairLaunchLotteryBitmap(fairLaunchObj.tokenMint))[0];
+    //@ts-ignore
+    const fairLaunchLotteryBitmap = (
+      await getFairLaunchLotteryBitmap(fairLaunchObj.tokenMint)
+    )[0];
 
     await anchorProgram.rpc.startPhaseThree({
       accounts: {
@@ -1986,8 +1984,10 @@ program
     const fairLaunchObj = await anchorProgram.account.fairLaunch.fetch(
       fairLaunchKey,
     );
-    const tokenAccount = //@ts-ignore
-    (await getAtaForMint(fairLaunchObj.tokenMint, walletKeyPair.publicKey))[0];
+    //@ts-ignore
+    const tokenAccount = (
+      await getAtaForMint(fairLaunchObj.tokenMint, walletKeyPair.publicKey)
+    )[0];
 
     const exists = await anchorProgram.provider.connection.getAccountInfo(
       tokenAccount,

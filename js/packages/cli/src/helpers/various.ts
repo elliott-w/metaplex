@@ -1,7 +1,18 @@
-import { UseMethod, Uses } from '@metaplex-foundation/mpl-token-metadata';
+import {
+  Metadata,
+  MetadataKey,
+  UseMethod,
+  Uses,
+} from '@metaplex-foundation/mpl-token-metadata';
 import { BN, Program, web3 } from '@project-serum/anchor';
 import { Token, TOKEN_PROGRAM_ID } from '@solana/spl-token';
-import { AccountInfo, LAMPORTS_PER_SOL } from '@solana/web3.js';
+import {
+  AccountInfo,
+  Connection,
+  Keypair,
+  LAMPORTS_PER_SOL,
+  PublicKey,
+} from '@solana/web3.js';
 import fs from 'fs';
 import _ from 'lodash';
 import log from 'loglevel';
@@ -11,17 +22,19 @@ import { getAtaForMint } from './accounts';
 import { CLUSTERS, DEFAULT_CLUSTER } from './constants';
 import { StorageType } from './storage-type';
 
-const { readFile } = fs.promises;
-
 export async function getCandyMachineV2Config(
   walletKeyPair: web3.Keypair,
   anchorProgram: Program,
   configPath: any,
 ): Promise<{
   storage: StorageType;
+  nftStorageKey: string | null;
+  nftStorageGateway: string | null;
   ipfsInfuraProjectId: string;
   number: number;
   ipfsInfuraSecret: string;
+  pinataJwt: string;
+  pinataGateway: string;
   awsS3Bucket: string;
   retainAuthority: boolean;
   mutable: boolean;
@@ -59,9 +72,13 @@ export async function getCandyMachineV2Config(
 
   const {
     storage,
+    nftStorageKey,
+    nftStorageGateway,
     ipfsInfuraProjectId,
     number,
     ipfsInfuraSecret,
+    pinataJwt,
+    pinataGateway,
     awsS3Bucket,
     noRetainAuthority,
     noMutable,
@@ -187,9 +204,13 @@ export async function getCandyMachineV2Config(
 
   return {
     storage,
+    nftStorageKey,
+    nftStorageGateway,
     ipfsInfuraProjectId,
     number,
     ipfsInfuraSecret,
+    pinataJwt,
+    pinataGateway: pinataGateway ? pinataGateway : null,
     awsS3Bucket,
     retainAuthority: !noRetainAuthority,
     mutable: !noMutable,
@@ -205,10 +226,6 @@ export async function getCandyMachineV2Config(
     uuid,
     arweaveJwk,
   };
-}
-export async function readJsonFile(fileName: string) {
-  const file = await readFile(fileName, 'utf-8');
-  return JSON.parse(file);
 }
 
 export function shuffle(array) {
@@ -611,4 +628,49 @@ export function parseUses(useMethod: string, total: number): Uses | null {
     return new Uses({ useMethod: realUseMethod, total, remaining: total });
   }
   return null;
+}
+
+export async function parseCollectionMintPubkey(
+  collectionMint: null | PublicKey,
+  connection: Connection,
+  walletKeypair: Keypair,
+) {
+  let collectionMintPubkey: null | PublicKey = null;
+  if (collectionMint) {
+    try {
+      collectionMintPubkey = new PublicKey(collectionMint);
+    } catch (error) {
+      throw new Error(
+        'Invalid Pubkey option. Please enter it as a base58 mint id',
+      );
+    }
+    const token = new Token(
+      connection,
+      collectionMintPubkey,
+      TOKEN_PROGRAM_ID,
+      walletKeypair,
+    );
+    await token.getMintInfo();
+  }
+  if (collectionMintPubkey) {
+    const metadata = await Metadata.findByMint(
+      connection,
+      collectionMintPubkey,
+    ).catch();
+    if (metadata.data.updateAuthority !== walletKeypair.publicKey.toString()) {
+      throw new Error(
+        'Invalid collection mint option. Metadata update authority does not match provided wallet keypair',
+      );
+    }
+    const edition = await Metadata.getEdition(connection, collectionMintPubkey);
+    if (
+      edition.data.key !== MetadataKey.MasterEditionV1 &&
+      edition.data.key !== MetadataKey.MasterEditionV2
+    ) {
+      throw new Error(
+        'Invalid collection mint. Provided collection mint does not have a master edition associated with it.',
+      );
+    }
+  }
+  return collectionMintPubkey;
 }
