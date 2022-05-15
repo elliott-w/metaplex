@@ -344,7 +344,7 @@ export const generateRandomSet = (
       keys.forEach(otherTrait => {
         if (
           tmp[otherTrait] &&
-          typeof breakdown[otherTrait][tmp[otherTrait]] != 'number' &&
+          typeof breakdown[otherTrait][tmp[otherTrait]] == 'object' &&
           breakdown[otherTrait][tmp[otherTrait]][trait]
         ) {
           breakdownToUse = breakdown[otherTrait][tmp[otherTrait]][trait];
