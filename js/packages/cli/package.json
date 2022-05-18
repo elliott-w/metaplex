@@ -10,6 +10,7 @@
     "metaplex": "node ./build/candy-machine-cli.js",
     "build": "tsc -p ./src",
     "upload": "node ./build/candy-machine-v2-cli.js upload -e mainnet-beta -k ./.cache/creator-keypair.json -cp example-candy-machine-upload-config.json -r https://ssc-dao.genesysgo.net ./assets",
+    "upload-dev": "ts-node src/candy-machine-v2-cli.ts upload -k .cache/creator-keypair.json -e devnet -r https://psytrbhymqlkfrhudd.dev.genesysgo.net:8899/ -cp example-candy-machine-upload-config.json assets",
     "update": "node ./build/candy-machine-v2-cli.js update_candy_machine -e mainnet-beta -k ./.cache/creator-keypair.json -cp example-candy-machine-upload-config.json -r https://ssc-dao.genesysgo.net",
     "verify-upload": "node ./build/candy-machine-v2-cli.js verify_upload -e mainnet-beta -k ./.cache/creator-keypair.json -r https://ssc-dao.genesysgo.net",
     "watch": "tsc -w -p ./src",

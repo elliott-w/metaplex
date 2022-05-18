@@ -1,22 +1,20 @@
-import * as cliProgress from 'cli-progress';
-import { readFile, stat } from 'fs/promises';
-import { PromisePool } from '@supercharge/promise-pool';
-import path from 'path';
-import Arweave from 'arweave';
-
-import { signers, bundleAndSignData, createData, DataItem } from 'arbundles';
-import { ArweaveSigner, Signer } from 'arbundles/src/signing';
-import log from 'loglevel';
-import { StorageType } from '../storage-type';
-import { Keypair } from '@solana/web3.js';
-import { getType, getExtension } from 'mime';
-import { AssetKey } from '../../types';
-import { sleep } from '../various';
-import Transaction from 'arweave/node/lib/transaction';
 import Bundlr from '@bundlr-network/client';
-
-import { getAssetManifest } from '../../commands/upload';
 import BundlrTransaction from '@bundlr-network/client/build/common/transaction';
+import { Keypair } from '@solana/web3.js';
+import { PromisePool } from '@supercharge/promise-pool';
+import { bundleAndSignData, createData, DataItem, signers } from 'arbundles';
+import { ArweaveSigner, Signer } from 'arbundles/src/signing';
+import Arweave from 'arweave';
+import Transaction from 'arweave/node/lib/transaction';
+import * as cliProgress from 'cli-progress';
+import { readdir, readFile, stat } from 'fs/promises';
+import log from 'loglevel';
+import { getExtension, getType } from 'mime';
+import path from 'path';
+import { getAssetManifest } from '../../commands/upload';
+import { AssetKey } from '../../types';
+import { StorageType } from '../storage-type';
+import { sleep } from '../various';
 
 export const LAMPORTS = 1_000_000_000;
 /**
@@ -224,6 +222,22 @@ async function getFilePairSize({
   }, Promise.resolve(dummyAreaveManifestByteSize));
 }
 
+async function getFileBundleSize(
+  dirname: string,
+  files: string[],
+): Promise<number> {
+  return await files.reduce(async (accP, file) => {
+    const acc = await accP;
+    if (!file) {
+      return acc;
+    } else {
+      const { size } = await stat(path.join(dirname, file));
+      //Adds the 2kb buffer for the txn header and the 10kb min file upload size for bundlr
+      return acc + 2000 + Math.max(10000, size);
+    }
+  }, Promise.resolve(dummyAreaveManifestByteSize));
+}
+
 /**
  * Object used to extract the file pairs to be included in the next bundle, from
  * the current list of filePairs being processed.
@@ -234,6 +248,44 @@ type BundleRange = {
   count: number;
   size: number;
 };
+
+/**
+ * From a list of file bundles, compute the BundleRange that should be included
+ * in a bundle, consisting of one or multiple image + manifest pairs,
+ * according to the size of the files to be included in respect of the
+ * BUNDLE_SIZE_LIMIT.
+ */
+async function getFileBundleRange(
+  dirname: string,
+  fileBundles: string[][],
+  splitSize: boolean = false,
+): Promise<BundleRange> {
+  let total = 0;
+  let count = 0;
+  for (const fileBundle of fileBundles) {
+    const filePairSize = await getFileBundleSize(dirname, fileBundle);
+
+    const limit = splitSize
+      ? BUNDLE_SIZE_BYTE_LIMIT * 2
+      : BUNDLE_SIZE_BYTE_LIMIT;
+    if (total + filePairSize >= limit) {
+      if (count === 0) {
+        throw new Error(
+          `${fileBundle.join(' + ')} too big (${sizeMB(
+            filePairSize,
+          )}MB) for arBundles size limit of ${sizeMB(
+            BUNDLE_SIZE_BYTE_LIMIT,
+          )}MB.`,
+        );
+      }
+      break;
+    }
+
+    total += filePairSize;
+    count += 1;
+  }
+  return { count, size: total };
+}
 
 /**
  * From a list of file pairs, compute the BundleRange that should be included
@@ -334,6 +386,126 @@ async function getUpdatedManifest(
     manifest.animation_url = animationLink;
   }
   return manifest;
+}
+
+/**
+ * Fetches the corresponding filepair and creates a data item if arweave bundle
+ * or creates a bundlr transaction if arweave sol, to basically avoid clashing
+ * between data item's id
+ */
+async function processFileBundle({
+  signer,
+  filePair,
+  bundlr,
+  storageType,
+}: ProcessFileArgs) {
+  let imageDataItem: BundlrTransaction | DataItem;
+  let animationDataItem: BundlrTransaction | DataItem;
+  let manifestDataItem: BundlrTransaction | DataItem;
+  let arweavePathManifestDataItem: BundlrTransaction | DataItem;
+
+  const imageContentType = getType(filePair.image);
+  const imageBuffer = await readFile(filePair.image);
+  if (storageType === StorageType.ArweaveSol) {
+    //@ts-ignore
+    imageDataItem = bundlr.createTransaction(imageBuffer, {
+      tags: imageTags.concat({
+        name: 'Content-Type',
+        value: imageContentType,
+      }),
+    });
+    await (imageDataItem as unknown as BundlrTransaction).sign();
+  } else if (storageType === StorageType.ArweaveBundle) {
+    imageDataItem = await getImageDataItem(
+      signer,
+      imageBuffer,
+      imageContentType,
+    );
+    await (imageDataItem as DataItem).sign(signer);
+  }
+
+  let animationContentType = undefined;
+  if (filePair.animation) {
+    animationContentType = getType(filePair.animation);
+    const animationBuffer = await readFile(filePair.animation);
+    if (storageType === StorageType.ArweaveSol) {
+      //@ts-ignore
+      animationDataItem = bundlr.createTransaction(animationBuffer, {
+        tags: imageTags.concat({
+          name: 'Content-Type',
+          value: animationContentType,
+        }),
+      });
+      await (animationDataItem as unknown as BundlrTransaction).sign();
+    } else if (storageType === StorageType.ArweaveBundle) {
+      animationDataItem = await getImageDataItem(
+        signer,
+        animationBuffer,
+        animationContentType,
+      );
+      await (animationDataItem as DataItem).sign(signer);
+    }
+  }
+
+  const imageLink = `https://arweave.net/${imageDataItem.id}?ext=${path
+    .extname(filePair.image)
+    .replace('.', '')}`;
+  const animationLink = filePair.animation
+    ? `https://arweave.net/${animationDataItem.id}?ext=${path
+        .extname(filePair.animation)
+        .replace('.', '')}`
+    : undefined;
+
+  const manifest = await getUpdatedManifest(
+    filePair.manifest,
+    imageLink,
+    animationLink,
+  );
+
+  if (storageType === StorageType.ArweaveSol) {
+    //@ts-ignore
+    manifestDataItem = bundlr.createTransaction(JSON.stringify(manifest), {
+      tags: manifestTags,
+    });
+
+    await (manifestDataItem as unknown as BundlrTransaction).sign();
+  } else if (storageType === StorageType.ArweaveBundle) {
+    manifestDataItem = getManifestDataItem(signer, manifest);
+    await (manifestDataItem as DataItem).sign(signer);
+  }
+
+  const arweavePathManifest = createArweavePathManifest(
+    manifestDataItem.id,
+    imageDataItem.id,
+    `.${getExtension(imageContentType)}`,
+    filePair.animation ? animationDataItem.id : undefined,
+    filePair.animation ? `.${getExtension(animationContentType)}` : undefined,
+  );
+
+  if (storageType === StorageType.ArweaveSol) {
+    //@ts-ignore
+    arweavePathManifestDataItem = bundlr.createTransaction(
+      JSON.stringify(arweavePathManifest),
+      { tags: arweavePathManifestTags },
+    );
+
+    await (arweavePathManifestDataItem as unknown as BundlrTransaction).sign();
+    await arweavePathManifestDataItem.sign(signer);
+  } else if (storageType === StorageType.ArweaveBundle) {
+    arweavePathManifestDataItem = getArweavePathManifestDataItem(
+      signer,
+      arweavePathManifest,
+    );
+    await (arweavePathManifestDataItem as DataItem).sign(signer);
+  }
+
+  return {
+    imageDataItem,
+    animationDataItem,
+    manifestDataItem,
+    arweavePathManifestDataItem,
+    manifest,
+  };
 }
 
 /**
@@ -454,6 +626,298 @@ async function processFiles({
     arweavePathManifestDataItem,
     manifest,
   };
+}
+
+/**
+ * Initialize the Arweave Bundle Upload Generator.
+ * Returns a Generator function that allows to trigger an asynchronous bundle
+ * upload to Arweave when calling generator.next().
+ * The Arweave Bundle Upload Generator automatically groups assets file pairs
+ * into appropriately sized bundles.
+ * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Generator
+ */
+export async function* makeArweaveBundleUploadGeneratorV2(
+  storage: StorageType,
+  dirname: string,
+  cache: any,
+  env: 'mainnet-beta' | 'devnet',
+  jwk?: any,
+  walletKeyPair?: Keypair,
+  batchSize?: number,
+  rpcUrl?: string,
+): AsyncGenerator<UploadGeneratorResult> {
+  let signer: ArweaveSigner;
+  const storageType: StorageType = storage;
+  if (storageType === StorageType.ArweaveSol && !walletKeyPair) {
+    throw new Error(
+      'To pay for uploads with SOL, you need to pass a Solana Keypair',
+    );
+  }
+  if (storageType === StorageType.ArweaveBundle && !jwk) {
+    throw new Error(
+      'To pay for uploads with AR, you need to pass a Arweave JWK',
+    );
+  }
+
+  if (storageType === StorageType.ArweaveBundle) {
+    signer = new signers.ArweaveSigner(jwk);
+  }
+
+  const arweave = getArweave();
+  const bundlr =
+    storageType === StorageType.ArweaveSol
+      ? env === 'mainnet-beta'
+        ? new Bundlr(
+            'https://node1.bundlr.network',
+            'solana',
+            walletKeyPair.secretKey,
+            {
+              timeout: 60000,
+              providerUrl: rpcUrl ?? 'https://api.metaplex.solana.com',
+            },
+          )
+        : new Bundlr(
+            'https://devnet.bundlr.network',
+            'solana',
+            walletKeyPair.secretKey,
+            {
+              timeout: 60000,
+              providerUrl: 'https://metaplex.devnet.rpcpool.com',
+            },
+          )
+      : undefined;
+  log.debug('Bundlr type is: ', env);
+
+  const metadataFiles = (await readdir(dirname, { withFileTypes: true }))
+    .map(ent => ent.name)
+    .filter(file => path.extname(file).toLowerCase() === '.json')
+    .filter(file => {
+      const name = file.split('.')[0];
+      return !cache.items[name]?.link;
+    });
+
+  const metadatas = await Promise.all(
+    metadataFiles.map(async metadataFile =>
+      JSON.parse(await readFile(path.join(dirname, metadataFile), 'utf-8')),
+    ),
+  );
+
+  const handledMediaFiles = new Set(Object.keys(cache.assets));
+  const fileBundles = metadataFiles.map((metadataFile, i) => {
+    const metadata = metadatas[i];
+    const files = [metadataFile];
+    for (const file of metadata.properties.files) {
+      if (!handledMediaFiles.has(file.uri)) {
+        files.push(file.uri);
+        handledMediaFiles.add(file.uri);
+      }
+    }
+    return files;
+  });
+
+  console.log(fileBundles);
+  yield {
+    cacheKeys: ['0'],
+    arweavePathManifestLinks: [''],
+    updatedManifests: [
+      {
+        name: 'test',
+        animation_url: '',
+        image: '',
+        properties: {
+          files: [],
+        },
+      },
+    ],
+  };
+
+  if (storageType === StorageType.ArweaveSol) {
+    const bytes = (
+      await Promise.all(
+        fileBundles.map(fileBundle => getFileBundleSize(dirname, fileBundle)),
+      )
+    ).reduce((a, b) => a + b, 0);
+    const cost = await bundlr.utils.getPrice('solana', bytes);
+    const bufferCost = cost.multipliedBy(3).dividedToIntegerBy(2);
+    log.info(
+      `${bufferCost.toNumber() / LAMPORTS} SOL to upload ${sizeMB(
+        bytes,
+      )}MB with buffer`,
+    );
+    const currentBalance = await bundlr.getLoadedBalance();
+    if (currentBalance.lt(bufferCost)) {
+      log.info(
+        `Current balance ${
+          currentBalance.toNumber() / LAMPORTS
+        }. Sending fund txn...`,
+      );
+      await bundlr.fund(bufferCost.minus(currentBalance));
+      log.info(`Successfully funded Arweave Bundler, starting upload`);
+    } else {
+      log.info(
+        `Current balance ${
+          currentBalance.toNumber() / LAMPORTS
+        } is sufficient.`,
+      );
+    }
+  }
+
+  // As long as we still have file bundles needing upload, compute the next range
+  // of file bundles we can include in the next bundle.
+  // while (fileBundles.length) {
+  //   const { count, size } = await getFileBundleRange(
+  //     dirname,
+  //     fileBundles,
+  //     storage === StorageType.ArweaveSol,
+  //   );
+
+  //   log.info(
+  //     `Computed Bundle range, including ${count} file pair(s) totaling ${sizeMB(
+  //       size,
+  //     )}MB.`,
+  //   );
+  //   const fileBundlesChunk = fileBundles.splice(0, count);
+  //   log.info('Processing file groups...');
+
+  //   const progressBar = new cliProgress.SingleBar(
+  //     {
+  //       format: 'Progress: [{bar}] {percentage}% | {value}/{total}',
+  //     },
+  //     cliProgress.Presets.shades_classic,
+  //   );
+
+  //   progressBar.start(fileBundlesChunk.length, 0);
+  //   const { cacheKeys, dataItems, arweavePathManifestLinks, updatedManifests } =
+  //     await fileBundlesChunk.reduce<Promise<ProcessedBundleFilePairs>>(
+  //       // Process a bundle file pair (image + manifest).
+  //       // - retrieve image data, put it in a DataItem
+  //       // - sign the image DataItem and build the image link from the txId.
+  //       // - retrieve & update the asset manifest w/ the image link
+  //       // - put the manifest in a DataItem
+  //       // - sign the manifest DataItem and build the manifest link form the txId.
+  //       // - create the Arweave Path Manifest w/ both asset image + manifest txIds pair.
+  //       // - fill the results accumulator
+  //       async function processFileBundle(accP, fileBundle) {
+  //         const acc = await accP;
+  //         log.debug('Processing metadata file', fileBundle[0]);
+
+  //         const {
+  //           imageDataItem,
+  //           animationDataItem,
+  //           manifestDataItem,
+  //           arweavePathManifestDataItem,
+  //           manifest,
+  //         } = await processFiles({
+  //           storageType,
+  //           signer,
+  //           bundlr,
+  //           filePair: fileBundle,
+  //         });
+
+  //         const arweavePathManifestLink = `https://arweave.net/${manifestDataItem.id}`;
+
+  //         acc.cacheKeys.push(fileBundle.key);
+  //         acc.dataItems.push(
+  //           imageDataItem as DataItem,
+  //           manifestDataItem as DataItem,
+  //           arweavePathManifestDataItem as DataItem,
+  //         );
+  //         if (fileBundle.animation) {
+  //           acc.dataItems.push(animationDataItem as DataItem);
+  //         }
+  //         acc.arweavePathManifestLinks.push(arweavePathManifestLink);
+  //         acc.updatedManifests.push(manifest);
+
+  //         log.debug('Processed File Pair', fileBundle.key);
+  //         progressBar.increment();
+  //         return acc;
+  //       },
+  //       Promise.resolve({
+  //         cacheKeys: [],
+  //         dataItems: [],
+  //         arweavePathManifestLinks: [],
+  //         updatedManifests: [],
+  //       }),
+  //     );
+  //   progressBar.stop();
+  //   if (storageType === StorageType.ArweaveSol) {
+  //     const bundlrTransactions = [
+  //       ...dataItems,
+  //     ] as unknown as BundlrTransaction[];
+  //     log.info('Uploading bundle via Bundlr... in multiple transactions');
+  //     const progressBar = new cliProgress.SingleBar(
+  //       {
+  //         format: 'Progress: [{bar}] {percentage}% | {value}/{total}',
+  //       },
+  //       cliProgress.Presets.shades_classic,
+  //     );
+  //     progressBar.start(bundlrTransactions.length, 0);
+
+  //     let errored = false;
+  //     await PromisePool.withConcurrency(batchSize || 20)
+  //       .for(bundlrTransactions)
+  //       .handleError(async err => {
+  //         if (!errored) {
+  //           errored = true;
+  //           log.error(
+  //             `\nCould not complete Bundlr tx upload successfully, exiting due to: `,
+  //             err,
+  //           );
+  //         }
+  //         throw err;
+  //       })
+  //       .process(async tx => {
+  //         let attempts = 0;
+  //         const uploadTransaction = async () => {
+  //           await tx.upload().catch(async (err: Error) => {
+  //             attempts++;
+  //             if (attempts >= 3) {
+  //               throw err;
+  //             }
+  //             log.debug(
+  //               `Failed Bundlr tx upload, retrying transaction (attempt: ${attempts})`,
+  //               err,
+  //             );
+  //             await sleep(5 * 1000);
+  //             await uploadTransaction();
+  //           });
+  //         };
+
+  //         await uploadTransaction();
+  //         progressBar.increment();
+  //       });
+
+  //     progressBar.stop();
+  //     log.info('Bundle uploaded!');
+  //   }
+
+  //   if (storageType === StorageType.ArweaveBundle) {
+  //     const startBundleTime = Date.now();
+
+  //     log.info('Bundling...');
+
+  //     const bundle = await bundleAndSignData(dataItems, signer);
+  //     const endBundleTime = Date.now();
+  //     log.info(
+  //       `Bundled ${dataItems.length} data items in ${
+  //         (endBundleTime - startBundleTime) / 1000
+  //       }s`,
+  //     );
+  //     // @ts-ignore
+  //     // Argument of type
+  //     // 'import("node_modules/arweave/node/common").default'
+  //     // is not assignable to parameter of type
+  //     // 'import("node_modules/arbundles/node_modules/arweave/node/common").default'.
+  //     // Types of property 'api' are incompatible.
+  //     const tx = await bundle.toTransaction(arweave, jwk);
+  //     await arweave.transactions.sign(tx as Transaction, jwk);
+  //     log.info('Uploading bundle via arbundle...');
+  //     await arweave.transactions.post(tx);
+  //     log.info('Bundle uploaded!', tx.id);
+  //   }
+
+  //   yield { cacheKeys, arweavePathManifestLinks, updatedManifests };
+  // }
 }
 
 /**

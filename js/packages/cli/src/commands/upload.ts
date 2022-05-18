@@ -1,33 +1,31 @@
+import { BN, Program, web3 } from '@project-serum/anchor';
+import { PublicKey } from '@solana/web3.js';
+import { PromisePool } from '@supercharge/promise-pool';
 import * as cliProgress from 'cli-progress';
+import fs from 'fs';
 import { readFile } from 'fs/promises';
-import path from 'path';
 import log from 'loglevel';
+import path from 'path';
 import {
   createCandyMachineV2,
   loadCandyProgram,
   loadWalletKey,
 } from '../helpers/accounts';
-import { PublicKey } from '@solana/web3.js';
-import { BN, Program, web3 } from '@project-serum/anchor';
-
-import fs from 'fs';
-
-import { PromisePool } from '@supercharge/promise-pool';
 import { loadCache, saveCache } from '../helpers/cache';
+import { StorageType } from '../helpers/storage-type';
 import { arweaveUpload } from '../helpers/upload/arweave';
 import {
   makeArweaveBundleUploadGenerator,
+  makeArweaveBundleUploadGeneratorV2,
   withdrawBundlr,
 } from '../helpers/upload/arweave-bundle';
 import { awsUpload } from '../helpers/upload/aws';
 import { ipfsCreds, ipfsUpload } from '../helpers/upload/ipfs';
-
-import { StorageType } from '../helpers/storage-type';
-import { AssetKey } from '../types';
-import { chunks, sleep } from '../helpers/various';
-import { pinataUpload } from '../helpers/upload/pinata';
-import { setCollection } from './set-collection';
 import { nftStorageUploadGenerator } from '../helpers/upload/nft-storage';
+import { pinataUpload } from '../helpers/upload/pinata';
+import { chunks, sleep } from '../helpers/various';
+import { AssetKey } from '../types';
+import { setCollection } from './set-collection';
 
 export async function uploadV2({
   files,
@@ -113,6 +111,10 @@ export async function uploadV2({
 
   if (!cacheContent.items) {
     cacheContent.items = {};
+  }
+
+  if (!cacheContent.assets) {
+    cacheContent.assets = {};
   }
 
   const dedupedAssetKeys = getAssetKeysNeedingUpload(cacheContent.items, files);
@@ -221,17 +223,17 @@ export async function uploadV2({
     );
   }
 
-  if (dedupedAssetKeys.length) {
+  if (true) {
     if (
       storage === StorageType.ArweaveBundle ||
       storage === StorageType.ArweaveSol
     ) {
       // Initialize the Arweave Bundle Upload Generator.
       // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Generator
-      const arweaveBundleUploadGenerator = makeArweaveBundleUploadGenerator(
+      const arweaveBundleUploadGenerator = makeArweaveBundleUploadGeneratorV2(
         storage,
         dirname,
-        dedupedAssetKeys,
+        cacheContent,
         env,
         storage === StorageType.ArweaveBundle
           ? JSON.parse((await readFile(arweaveJwk)).toString())
@@ -417,6 +419,9 @@ type Cache = {
   };
   items: {
     [key: string]: any;
+  };
+  assets: {
+    [key: string]: string;
   };
 };
 
