@@ -9,25 +9,29 @@
         }
     ],
     "seller_fee_basis_points": 500,
-    "dnp": {},
-    "exclusive": {},
-    "orderExceptions": [],
+    "category": "video",
+    "external_url": "https://winto.io/",
+    "files": [
+        "gif",
+        "mp4"
+    ],
     "premadeCustoms": [
         {
             "traits": {
-                "Type": "Bronze.mp4"
+                "Type": "Bronze"
+            },
+
+            "count": 1
+        },
+        {
+            "traits": {
+                "Type": "Silver"
             },
             "count": 1
         },
         {
             "traits": {
-                "Type": "Silver.mp4"
-            },
-            "count": 1
-        },
-        {
-            "traits": {
-                "Type": "Gold.mp4"
+                "Type": "Gold"
             },
             "count": 1
         }
@@ -35,21 +39,5 @@
     "collection": {
         "name": "Wings",
         "family": "Wings"
-    },
-    "exactTraitBreakdowns": [],
-    "breakdown": {
-        "Type": {
-            "Bronze.png": 0.33,
-            "Silver.png": 0.33,
-            "Gold.png": 0.33
-        }
-    },
-    "order": [
-        "Type"
-    ],
-    "probabilityOrder": [
-        "Type"
-    ],
-    "width": 1500,
-    "height": 1500
-}
+    }
+  }

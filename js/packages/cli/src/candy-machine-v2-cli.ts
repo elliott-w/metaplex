@@ -47,6 +47,7 @@ import {
   getCandyMachineV2Config,
   parseCollectionMintPubkey,
   parsePrice,
+  readJsonFile,
 } from './helpers/various';
 import { CollectionData } from './types';
 
@@ -236,13 +237,13 @@ programCommand('upload')
     }
 
     if (animationFileCount !== 0 && animationFileCount !== jsonFileCount) {
-      throw new Error(
-        `number of animation files (${animationFileCount}) is different than the number of json files (${jsonFileCount})`,
-      );
+      // throw new Error(
+      //   `number of animation files (${animationFileCount}) is different than the number of json files (${jsonFileCount})`,
+      // );
     } else if (imageFileCount !== jsonFileCount) {
-      throw new Error(
-        `number of img files (${imageFileCount}) is different than the number of json files (${jsonFileCount})`,
-      );
+      // throw new Error(
+      //   `number of img files (${imageFileCount}) is different than the number of json files (${jsonFileCount})`,
+      // );
     }
 
     const elemCount = number ? number : imageFileCount;
@@ -1264,6 +1265,106 @@ function programCommand(
 
   return cmProgram;
 }
+
+program
+  .command('create_premade_assets')
+  .option(
+    '-c, --config-location <string>',
+    'Location of the traits configuration file',
+    './traits-configuration.json',
+  )
+  .action(async (directory, cmd) => {
+    const { configLocation } = cmd.opts();
+
+    const {
+      name,
+      symbol,
+      description,
+      seller_fee_basis_points,
+      external_url,
+      category,
+      creators,
+      collection,
+      files,
+      mediaAttribute,
+      premadeCustoms,
+    } = await readJsonFile(configLocation);
+
+    // Copy media files from traits to assets folder
+
+    for (const premadeCustom of premadeCustoms) {
+      for (const [attr, theTrait] of Object.entries(premadeCustom.traits)) {
+        const trait = theTrait as string;
+        for (const fileType of files) {
+          const src = path.join('traits', attr, trait + '.' + fileType);
+          const dest = path.join('assets', trait + '.' + fileType);
+          if (!fs.existsSync(dest)) {
+            fs.copyFileSync(src, dest);
+          }
+        }
+      }
+    }
+
+    log.info('Media files copied to assets folder');
+
+    const fileTypeMap = {
+      mp4: 'video/mp4',
+      gif: 'image/gif',
+      png: 'image/png',
+      jpg: 'image/jpeg',
+      jpeg: 'image/jpeg',
+    };
+
+    const videoFileTypes = ['mp4'];
+
+    let i = 0;
+
+    for (const premadeCustom of premadeCustoms) {
+      for (let j = 0; j < premadeCustom.count; j++) {
+        const trait = premadeCustom.traits[mediaAttribute];
+        const metadata = {
+          name: `${name}${i + 1}`,
+          symbol,
+          image: `${trait}.${files[0]}`,
+          description,
+          seller_fee_basis_points,
+          external_url,
+          collection,
+          attributes: [],
+          properties: {
+            files: [],
+            category,
+            creators,
+          },
+        };
+        for (const fileType of files) {
+          if (!(fileType in fileTypeMap)) {
+            throw new Error(`${fileType} files not supported`);
+          }
+          metadata.properties.files.push({
+            uri: `${trait}.${fileType}`,
+            type: fileTypeMap[fileType],
+          });
+          if (videoFileTypes.includes(fileType)) {
+            metadata['animation_url'] = `${trait}.${fileType}`;
+          }
+        }
+
+        for (const [attr, trait] of Object.entries(premadeCustom.traits)) {
+          metadata.attributes.push({
+            trait_type: attr,
+            value: trait,
+          });
+        }
+
+        fs.writeFileSync(
+          path.join('assets', `${i}.json`),
+          JSON.stringify(metadata, undefined, 2),
+        );
+        i += 1;
+      }
+    }
+  });
 
 program
   .command('create_generative_art')
