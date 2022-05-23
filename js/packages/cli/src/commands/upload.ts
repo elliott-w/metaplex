@@ -233,6 +233,7 @@ export async function uploadV2({
       const arweaveBundleUploadGenerator = makeArweaveBundleUploadGeneratorV2(
         storage,
         dirname,
+        cacheName,
         cacheContent,
         env,
         storage === StorageType.ArweaveBundle
